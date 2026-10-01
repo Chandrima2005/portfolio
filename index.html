@@ -7,14 +7,20 @@
 <meta name="description" content="Chandrima Das: M.Tech student in Robotics & AI at IIT Guwahati and Junior Data Scientist. Projects in machine learning, signal processing, RAG and CAD analysis.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body data-view="home">
 
 <div id="loader" aria-hidden="true">
-  <div class="ld-word"><div class="ld-row" id="ldA"></div><div class="ld-row das" id="ldB"></div></div>
-  <p class="ld-cap" id="ldCap">Portfolio 2026</p>
+  <div class="ld-grid"></div>
+  <span class="ld-corner tl"></span><span class="ld-corner tr"></span><span class="ld-corner bl"></span><span class="ld-corner br"></span>
+  <div class="ld-box">
+    <div class="ld-log" id="ldLog"></div>
+    <div class="ld-name"><span id="ldA"></span><span id="ldB" class="das"></span></div>
+    <div class="ld-bar"><i id="ldFill"></i></div>
+    <div class="ld-meta"><span id="ldStat">booting</span><span id="ldPct">000%</span></div>
+  </div>
 </div>
 <!-- Custom cursor, page-transition curtain and the 3D background canvas -->
 <div id="cursor" aria-hidden="true"><div class="c-dot"></div><div class="c-ring"><div class="c-box"><i></i><i></i><i></i><i></i></div><span class="c-tag"><b></b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M8 7h9v9"/></svg></span></div></div>
@@ -24,7 +30,6 @@
 <header class="bar">
   <div class="wrap">
     <a class="brand" href="#home" data-cursor-hover>
-      <svg viewBox="0 0 28 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M1 9h6l2.5-7 4 14 3.5-10 2 3H27"/></svg>
       Chandrima Das
     </a>
     <span class="here" id="here">Home</span>
@@ -37,7 +42,8 @@
     <ul class="menu-links">
       <li><a href="#home" data-link="home">Home <small>Who I am</small></a></li>
       <li><a href="#projects" data-link="projects">Projects <small>5 live demos</small></a></li>
-      <li><a href="#experience" data-link="experience">Experience <small>Roles and education</small></a></li>
+      <li><a href="#experience" data-link="experience">Experience <small>Work and research</small></a></li>
+      <li><a href="#education" data-link="education">Education <small>Degrees and school</small></a></li>
       <li><a href="#skills" data-link="skills">Skills <small>What I work with</small></a></li>
       <li><a href="#contact" data-link="contact">Contact <small>Say hello</small></a></li>
     </ul>
@@ -50,41 +56,44 @@
 </div>
 
 <main>
-<!-- HOME: intro, then every section on one page -->
+<!-- HOME: eight full-screen pages. Scrolling, swiping or the arrow keys move one whole page at a time -->
 <div class="view" data-view="home" data-label="Home" data-title="Chandrima Das · ML, Computer Vision & Signal Processing">
   <section id="journey" aria-label="Chandrima Das">
-    <div class="stage">
-      <div class="act act-intro" id="home">
-        <div class="wrap">
-          <p class="hello"><span>Hi, I'm</span></p>
-          <h1 class="big-name" id="homeH" tabindex="-1"><span class="ln"><span>Chandrima</span></span><span class="ln"><span>Das</span></span></h1>
-          <div class="intro-foot">
-            <div class="reveal-up d1">
-              <p class="lede">A data scientist with a background in <strong>electronics and communication engineering</strong>. I work across Python, data analytics, machine learning and signal processing, and I design interfaces that make the results clear and easy to use.</p>
-              <ul class="roles">
-                <li><b>Robotics &amp; AI</b> at IIT Guwahati</li>
-                <li><b>Junior Data Scientist</b> at Calsoft</li>
-                <li><b>ML research</b> with SINP</li>
-              </ul>
-            </div>
-            <div class="cta reveal-up d2">
-              <a class="btn primary" href="#projects" data-cursor-hover>Explore my work</a>
-              <a class="btn" href="mailto:daschandrima2005@gmail.com" data-cursor-hover>Email me</a>
+    <div class="stage" id="track">
+      <section class="pg pg-intro" id="home" data-label="Home">
+        <div class="wrap intro-grid">
+          <div class="intro-main">
+            <p class="hello"><span>Hi, I'm</span></p>
+            <h1 class="big-name" id="homeH" tabindex="-1"><span class="ln"><span>Chandrima</span></span><span class="ln"><span>Das</span></span></h1>
+            <div class="intro-foot">
+              <p class="lede reveal-up d1">A data scientist with a background in <strong>electronics and communication engineering</strong>. I work across Python, data analytics, machine learning and signal processing, and I design interfaces that make the results clear and easy to use.</p>
+              <div class="cta reveal-up d2">
+                <a class="btn primary" href="#projects" data-cursor-hover>Explore my work</a>
+                <a class="btn" href="mailto:daschandrima2005@gmail.com" data-cursor-hover>Email me</a>
+              </div>
             </div>
           </div>
+          <aside class="intro-side reveal-up d3" aria-label="Currently">
+            <p class="is-h"><span class="is-live" aria-hidden="true"></span>Currently</p>
+            <ul class="is-list">
+              <li style="--c:var(--cyan)"><b>M.Tech, Robotics &amp; AI</b><span>Indian Institute of Technology Guwahati</span></li>
+              <li style="--c:var(--violet)"><b>Junior Data Scientist</b><span>Calsoft</span></li>
+              <li style="--c:var(--warm)"><b>ML research</b><span>Saha Institute of Nuclear Physics</span></li>
+            </ul>
+          </aside>
         </div>
-        <div class="scroll-hint reveal-up d3"><span>Scroll</span><i></i></div>
-      </div>
+        <a class="is-scroll reveal-up d3" href="#projects" data-cursor-hover><span class="is-mouse" aria-hidden="true"><i></i></span><b>Scroll to explore</b><span class="is-chev" aria-hidden="true"><i></i><i></i></span></a>
+      </section>
 
-      <!-- PROJECTS (compact). Each card opens its full view from project-details.html -->
-      <section class="band" id="projects" aria-labelledby="projectsH">
+      <!-- PROJECTS: two pages of rows. Each row opens its full view from project-details.html -->
+      <section class="pg pg-proj" id="projects" data-label="Projects" aria-labelledby="projectsH">
         <div class="wrap">
           <header class="sec-head rv">
             <h2 id="projectsH" tabindex="-1"><span>Projects</span></h2>
             <p>Five things I built and shipped, each running live. Hover a preview to scroll the real site, click to open the project.</p>
           </header>
           <div class="pcs">
-            <a class="pc rv" href="#gradient-atlas" data-cursor="Open" style="--glow:#E08A1E; --glowtxt:#E08A1E">
+            <a class="pc rv" href="#gradient-atlas" data-cursor="Open" style="--i:0; --glow:#E08A1E; --glowtxt:#E08A1E">
               <p class="pc-no"><b>01</b>Interactive ML course</p>
               <div class="pc-txt">
                 <h3>Gradient Atlas</h3>
@@ -92,9 +101,9 @@
                 <p class="pc-tags">Classical ML <i>·</i> NumPy <i>·</i> Interactive graph</p>
                 <span class="pc-go"><span class="pc-arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>View project</span>
               </div>
-              <div class="pc-shot"><div class="frame"><div class="fbar"><i></i><i></i><i></i><span>gradient-atlas.chandrima-das.com</span></div><div class="fview"><img src="assets/images/gradient-atlas.jpg" alt="Screenshot of the Gradient Atlas website" loading="lazy"></div></div></div>
+              <div class="pc-shot"><div class="frame"><div class="fbar"><i></i><i></i><i></i><span>gradient-atlas.chandrima-das.com</span></div><div class="fview"><img src="assets/images/gradient-atlas.jpg" alt="Screenshot of the Gradient Atlas website"></div></div></div>
             </a>
-            <a class="pc rv" href="#index" data-cursor="Open" style="--glow:#FF8A3D; --glowtxt:#F07A2E">
+            <a class="pc rv" href="#index" data-cursor="Open" style="--i:1; --glow:#FF8A3D; --glowtxt:#F07A2E">
               <p class="pc-no"><b>02</b>Physics research with SINP</p>
               <div class="pc-txt">
                 <h3>InDEx n/γ Discrimination</h3>
@@ -102,9 +111,9 @@
                 <p class="pc-tags">Signal processing <i>·</i> STFT <i>·</i> SVM</p>
                 <span class="pc-go"><span class="pc-arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>View project</span>
               </div>
-              <div class="pc-shot"><div class="frame"><div class="fbar"><i></i><i></i><i></i><span>neutron-gamma-detector.chandrima-das.com</span></div><div class="fview"><img src="assets/images/index-dashboard.jpg" alt="Screenshot of the InDEx neutron/gamma dashboard" loading="lazy"></div></div></div>
+              <div class="pc-shot"><div class="frame"><div class="fbar"><i></i><i></i><i></i><span>neutron-gamma-detector.chandrima-das.com</span></div><div class="fview"><img src="assets/images/index-dashboard.jpg" alt="Screenshot of the InDEx neutron/gamma dashboard"></div></div></div>
             </a>
-            <a class="pc rv" href="#plugged-in" data-cursor="Open" style="--glow:#2DD4BF; --glowtxt:#14A99A">
+            <a class="pc rv" href="#plugged-in" data-cursor="Open" style="--i:2; --glow:#2DD4BF; --glowtxt:#14A99A">
               <p class="pc-no"><b>03</b>Data analytics dashboard</p>
               <div class="pc-txt">
                 <h3>Plugged In</h3>
@@ -112,9 +121,20 @@
                 <p class="pc-tags">JavaScript <i>·</i> Data visualisation <i>·</i> EDA</p>
                 <span class="pc-go"><span class="pc-arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>View project</span>
               </div>
-              <div class="pc-shot"><div class="frame"><div class="fbar"><i></i><i></i><i></i><span>chandrima2005.github.io/analytics-dashboard-assessment</span></div><div class="fview"><img src="assets/images/plugged-in.jpg" alt="Screenshot of the Plugged In EV dashboard" loading="lazy"></div></div></div>
+              <div class="pc-shot"><div class="frame"><div class="fbar"><i></i><i></i><i></i><span>chandrima2005.github.io/analytics-dashboard-assessment</span></div><div class="fview"><img src="assets/images/plugged-in.jpg" alt="Screenshot of the Plugged In EV dashboard"></div></div></div>
             </a>
-            <a class="pc rv" href="#construction-copilot" data-cursor="Open" style="--glow:#7C6CFF; --glowtxt:#6B5BF0">
+          </div>
+        </div>
+      </section>
+
+      <section class="pg pg-proj" id="projects-more" data-label="Projects" aria-labelledby="projectsMoreH">
+        <div class="wrap">
+          <header class="sec-head rv">
+            <h2 id="projectsMoreH" tabindex="-1"><span>More projects</span></h2>
+            <p>Two more live builds, and the rest of my work on GitHub.</p>
+          </header>
+          <div class="pcs">
+            <a class="pc rv" href="#construction-copilot" data-cursor="Open" style="--i:0; --glow:#7C6CFF; --glowtxt:#6B5BF0">
               <p class="pc-no"><b>04</b>LLM agent for CAD drawings</p>
               <div class="pc-txt">
                 <h3>Construction Copilot</h3>
@@ -122,9 +142,9 @@
                 <p class="pc-tags">Python <i>·</i> Tool calling <i>·</i> RAG</p>
                 <span class="pc-go"><span class="pc-arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>View project</span>
               </div>
-              <div class="pc-shot"><div class="frame"><div class="fbar"><i></i><i></i><i></i><span>cad.chandrima-das.com</span></div><div class="fview"><img src="assets/images/construction-copilot.jpg" alt="Screenshot of Construction Copilot" loading="lazy"></div></div></div>
+              <div class="pc-shot"><div class="frame"><div class="fbar"><i></i><i></i><i></i><span>cad.chandrima-das.com</span></div><div class="fview"><img src="assets/images/construction-copilot.jpg" alt="Screenshot of Construction Copilot"></div></div></div>
             </a>
-            <a class="pc rv" href="#marginalia" data-cursor="Open" style="--glow:#E0B04A; --glowtxt:#C4921F">
+            <a class="pc rv" href="#marginalia" data-cursor="Open" style="--i:1; --glow:#E0B04A; --glowtxt:#C4921F">
               <p class="pc-no"><b>05</b>Retrieval-augmented Q&amp;A</p>
               <div class="pc-txt">
                 <h3>Marginalia</h3>
@@ -132,90 +152,100 @@
                 <p class="pc-tags">RAG <i>·</i> pdf.js <i>·</i> Netlify Functions</p>
                 <span class="pc-go"><span class="pc-arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>View project</span>
               </div>
-              <div class="pc-shot"><div class="frame"><div class="fbar"><i></i><i></i><i></i><span>rag-doc-qa-by-chandrima.netlify.app</span></div><div class="fview"><img src="assets/images/marginalia.jpg" alt="Screenshot of Marginalia" loading="lazy"></div></div></div>
+              <div class="pc-shot"><div class="frame"><div class="fbar"><i></i><i></i><i></i><span>rag-doc-qa-by-chandrima.netlify.app</span></div><div class="fview"><img src="assets/images/marginalia.jpg" alt="Screenshot of Marginalia"></div></div></div>
             </a>
-          </div>
-          <div class="more rv">
-            <div><h3>There's more on GitHub</h3><p>Computer vision, robotics and AutoML experiments, plus hackathon work.</p></div>
-            <a class="btn" href="https://github.com/Chandrima2005?tab=repositories" target="_blank" rel="noopener" data-cursor-hover>All repositories</a>
+            <div class="more rv" style="--i:2">
+              <div><h3>There's more on GitHub</h3><p>Computer vision, robotics and AutoML experiments, plus hackathon work.</p></div>
+              <a class="btn" href="https://github.com/Chandrima2005?tab=repositories" target="_blank" rel="noopener" data-cursor-hover>All repositories</a>
+            </div>
           </div>
         </div>
       </section>
-      <!-- EXPERIENCE: education first, then work & research. Hover (or tap) a row to open its details -->
-      <section class="band" id="experience" aria-labelledby="experienceH">
+      <!-- EXPERIENCE: one page for work and research, one for education. Hover a row for its details -->
+      <section class="pg pg-xp" id="experience" data-label="Experience" aria-labelledby="experienceH">
         <div class="wrap">
-          <header class="sec-head rv">
-            <h2 id="experienceH" tabindex="-1"><span>Experience</span></h2>
-            <p>Where I studied and where I've worked. My M.Tech and my current role run side by side.</p>
-          </header>
+          <h2 class="xp-big rv" id="experienceH" tabindex="-1">Experience</h2>
+          <h3 class="xl-group rv" style="--i:0; --c:var(--violet)">Work</h3>
+          <ol class="xl">
+            <li class="xl-row rv" style="--i:1; --c:var(--violet)" tabindex="0">
+              <span class="xl-when">Dec 2025 — Present</span>
+              <div class="xl-main">
+                <p class="xl-role"><b>Junior Data Scientist</b><i class="xl-dot" aria-label="Current"></i><span>Calsoft</span></p>
+                <div class="xl-more"><div><p>Clean and analyse real-world datasets end to end, and build the Power BI dashboards product teams decide with.</p></div></div>
+              </div>
+              <span class="xl-tag">Alongside my M.Tech</span>
+            </li>
+            <li class="xl-row rv" style="--i:2; --c:var(--violet)" tabindex="0">
+              <span class="xl-when">Jun 2025 — Dec 2025</span>
+              <div class="xl-main">
+                <p class="xl-role"><b>AI/ML Intern</b><span>Calsoft</span></p>
+                <div class="xl-more"><div><p>Built ML, deep learning and LLM solutions in Python, and validated models and dashboards before release.</p></div></div>
+              </div>
+            </li>
+          </ol>
+          <h3 class="xl-group rv" style="--i:3; --c:var(--warm)">Research</h3>
+          <ol class="xl">
+            <li class="xl-row rv" style="--i:4; --c:var(--warm)" tabindex="0">
+              <span class="xl-when">Mar 2025 — Jul 2026</span>
+              <div class="xl-main">
+                <p class="xl-role"><b>Thesis Researcher</b><span>Saha Institute of Nuclear Physics</span></p>
+                <div class="xl-more"><div><p>Neutron/gamma classification for a dark-matter detector: 512-D STFT features from 200 real events, SVM from scratch, up to <b>100% accuracy</b>. <a href="#index">See the project</a></p></div></div>
+              </div>
+              <span class="xl-tag">Research</span>
+            </li>
+            <li class="xl-row rv" style="--i:5; --c:var(--warm)" tabindex="0">
+              <span class="xl-when">In preparation</span>
+              <div class="xl-main">
+                <p class="xl-role"><b>Neutron vs gamma-ray acoustic signals, with ML</b><span>SINP</span></p>
+                <div class="xl-more"><div><p>Writing up the thesis results on superheated liquid detectors for publication.</p></div></div>
+              </div>
+              <span class="xl-tag">Publication</span>
+            </li>
+          </ol>
+        </div>
+      </section>
 
-          <div class="xg">
-            <div class="xg-head rv"><h3>Education</h3><span>2 degrees</span></div>
-            <ol class="xp">
-              <li class="xp-row rv" style="--c:var(--cyan); --i:0" tabindex="0">
-                <span class="xp-when">Ongoing</span>
-                <div class="xp-main">
-                  <h4>M.Tech in Robotics &amp; Artificial Intelligence</h4>
-                  <p class="xp-org">Indian Institute of Technology Guwahati</p>
-                  <div class="xp-more"><div><p class="xp-sum">Master of Technology in robotics and artificial intelligence, studied alongside my role at Calsoft.</p></div></div>
-                </div>
-                <span class="xp-tag">Alongside work</span>
-              </li>
-              <li class="xp-row rv" style="--c:var(--cyan); --i:1" tabindex="0">
-                <span class="xp-when">Completed</span>
-                <div class="xp-main">
-                  <h4>B.Tech in Electronics &amp; Communication Engineering</h4>
-                  <p class="xp-org">RCC Institute of Information Technology</p>
-                  <div class="xp-more"><div><p class="xp-sum">Bachelor of Technology, graduated with a <b>CGPA of 8.2</b>. The signals and systems foundation behind my signal-processing work.</p></div></div>
-                </div>
-              </li>
-            </ol>
-          </div>
-
-          <div class="xg">
-            <div class="xg-head rv"><h3>Work &amp; research</h3><span>4 entries</span></div>
-            <ol class="xp">
-              <li class="xp-row rv" style="--c:var(--violet); --i:0" tabindex="0">
-                <span class="xp-when">Dec 2025 – now</span>
-                <div class="xp-main">
-                  <h4>Junior Data Scientist <span class="xp-now">Current</span></h4>
-                  <p class="xp-org">Calsoft Inc.</p>
-                  <div class="xp-more"><div><p class="xp-sum">Clean and analyse real-world datasets end to end, and build the Power BI dashboards product teams decide with.</p></div></div>
-                </div>
-                <span class="xp-tag">Alongside my M.Tech</span>
-              </li>
-              <li class="xp-row rv" style="--c:var(--violet); --i:1" tabindex="0">
-                <span class="xp-when">Jun – Dec 2025</span>
-                <div class="xp-main">
-                  <h4>AI/ML Intern</h4>
-                  <p class="xp-org">Calsoft Inc.</p>
-                  <div class="xp-more"><div><p class="xp-sum">Built ML, deep learning and LLM solutions in Python, and validated models and dashboards before release.</p></div></div>
-                </div>
-              </li>
-              <li class="xp-row rv" style="--c:var(--warm); --i:2" tabindex="0">
-                <span class="xp-when">Mar 2025 – Jul 2026</span>
-                <div class="xp-main">
-                  <h4>Thesis Researcher</h4>
-                  <p class="xp-org">Saha Institute of Nuclear Physics</p>
-                  <div class="xp-more"><div><p class="xp-sum">Neutron/gamma classification for a dark-matter detector: 512-D STFT features from 200 real events, SVM from scratch, up to <b>100% accuracy</b>. <a href="#index">See the project</a></p></div></div>
-                </div>
-                <span class="xp-tag">Research</span>
-              </li>
-              <li class="xp-row rv" style="--c:var(--warm); --i:3" tabindex="0">
-                <span class="xp-when">In preparation</span>
-                <div class="xp-main">
-                  <h4>ML discrimination of neutron and gamma-ray acoustic signals</h4>
-                  <p class="xp-org">With the Saha Institute of Nuclear Physics</p>
-                  <div class="xp-more"><div><p class="xp-sum">Writing up the thesis results on superheated liquid detectors for publication.</p></div></div>
-                </div>
-                <span class="xp-tag">Publication</span>
-              </li>
-            </ol>
-          </div>
+      <section class="pg pg-xp" id="education" data-label="Education" aria-labelledby="educationH">
+        <div class="wrap">
+          <h2 class="xp-big rv" id="educationH" tabindex="-1">Education</h2>
+          <ol class="xl">
+            <li class="xl-row rv" style="--i:0; --c:var(--cyan)" tabindex="0">
+              <span class="xl-when">2026 — Ongoing</span>
+              <div class="xl-main">
+                <p class="xl-role"><b>M.Tech, Robotics &amp; Artificial Intelligence</b><span>Indian Institute of Technology Guwahati</span></p>
+                <div class="xl-more"><div><p>Master of Technology in robotics and artificial intelligence, studied alongside my role at Calsoft.</p></div></div>
+              </div>
+              <span class="xl-tag">Alongside work</span>
+            </li>
+            <li class="xl-row rv" style="--i:1; --c:var(--cyan)" tabindex="0">
+              <span class="xl-when">2022 — 2026</span>
+              <div class="xl-main">
+                <p class="xl-role"><b>B.Tech, Electronics &amp; Communication Engineering</b><span>RCC Institute of Information Technology</span></p>
+                <div class="xl-more"><div><p>Bachelor of Technology. The signals and systems foundation behind my signal-processing work.</p></div></div>
+              </div>
+              <span class="xl-tag">CGPA 8.2</span>
+            </li>
+            <li class="xl-row rv" style="--i:2; --c:var(--violet)" tabindex="0">
+              <span class="xl-when">2020 — 2022</span>
+              <div class="xl-main">
+                <p class="xl-role"><b>Higher Secondary, PCMB</b><span>Bethune Collegiate School</span></p>
+                <div class="xl-more"><div><p>Physics, chemistry, mathematics and biology.</p></div></div>
+              </div>
+              <span class="xl-tag">92%</span>
+            </li>
+            <li class="xl-row rv" style="--i:3; --c:var(--violet)" tabindex="0">
+              <span class="xl-when">2010 — 2020</span>
+              <div class="xl-main">
+                <p class="xl-role"><b>Secondary</b><span>Bethune Collegiate School</span></p>
+                <div class="xl-more"><div><p>Secondary schooling, completed in 2020.</p></div></div>
+              </div>
+              <span class="xl-tag">93%</span>
+            </li>
+          </ol>
         </div>
       </section>
       <!-- SKILLS (compact deck) -->
-      <section class="band" id="skills" aria-labelledby="skillsH">
+      <section class="pg pg-skills" id="skills" data-label="Skills" aria-labelledby="skillsH">
         <div class="wrap">
           <header class="sec-head rv">
             <h2 id="skillsH" tabindex="-1"><span>Skills</span></h2>
@@ -235,15 +265,15 @@
         </div>
       </section>
 
-      <div class="act act-signal" id="actSignal">
+      <section class="pg pg-signal" id="signal" data-label="Signal">
         <div class="wrap">
           <p class="signal-line"><span>Noise is loud.</span><span>Signal is patient.</span></p>
           <p class="signal-sub">I believe smart work pays off only when it is built on hard work. I adapt quickly to new problems, tools and roles, and I bring the same care to each of them.</p>
         </div>
-      </div>
+      </section>
 
       <!-- CONTACT + FOOTER (the last screen of the landing page) -->
-      <section class="act act-foot" id="contact" aria-labelledby="contactH">
+      <section class="pg pg-foot" id="contact" data-label="Contact" aria-labelledby="contactH">
         <div class="wrap">
           <h2 class="ft-big" id="contactH" tabindex="-1">Thanks for<br>tuning in.</h2>
           <div class="ct-grid">
@@ -279,15 +309,18 @@
           <div class="ft-bottom"><span>© 2026 Chandrima Das</span><span class="ft-quote">Progress is a thousand small gaps, closed.</span><button class="ft-top" id="toTop" data-cursor-hover><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg>Back to top</button></div>
         </div>
       </section>
-
-      <nav class="dots" id="dots" aria-label="Sections on this page">
-        <a href="#home" data-s="home"><span>Intro</span></a>
-        <a href="#projects" data-s="projects"><span>Projects</span></a>
-        <a href="#experience" data-s="experience"><span>Experience</span></a>
-        <a href="#skills" data-s="skills"><span>Skills</span></a>
-        <a href="#contact" data-s="contact"><span>Contact</span></a>
-      </nav>
     </div>
+
+    <nav class="dots" id="dots" aria-label="Pages">
+      <a href="#home"><span>Intro</span></a>
+      <a href="#projects"><span>Projects</span></a>
+      <a href="#projects-more"><span>More projects</span></a>
+      <a href="#experience"><span>Experience</span></a>
+      <a href="#education"><span>Education</span></a>
+      <a href="#skills"><span>Skills</span></a>
+      <a href="#signal"><span>Signal</span></a>
+      <a href="#contact"><span>Contact</span></a>
+    </nav>
   </section>
 </div>
 <!-- PROJECT DETAILS: one full-screen view per project, opened from the cards in projects.html -->
@@ -413,7 +446,6 @@
 </main>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

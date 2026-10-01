@@ -1,73 +1,83 @@
-      <!-- EXPERIENCE: education first, then work & research. Hover (or tap) a row to open its details -->
-      <section class="band" id="experience" aria-labelledby="experienceH">
+      <!-- EXPERIENCE: one page for work and research, one for education. Hover a row for its details -->
+      <section class="pg pg-xp" id="experience" data-label="Experience" aria-labelledby="experienceH">
         <div class="wrap">
-          <header class="sec-head rv">
-            <h2 id="experienceH" tabindex="-1"><span>Experience</span></h2>
-            <p>Where I studied and where I've worked. My M.Tech and my current role run side by side.</p>
-          </header>
+          <h2 class="xp-big rv" id="experienceH" tabindex="-1">Experience</h2>
+          <h3 class="xl-group rv" style="--i:0; --c:var(--violet)">Work</h3>
+          <ol class="xl">
+            <li class="xl-row rv" style="--i:1; --c:var(--violet)" tabindex="0">
+              <span class="xl-when">Dec 2025 — Present</span>
+              <div class="xl-main">
+                <p class="xl-role"><b>Junior Data Scientist</b><i class="xl-dot" aria-label="Current"></i><span>Calsoft</span></p>
+                <div class="xl-more"><div><p>Clean and analyse real-world datasets end to end, and build the Power BI dashboards product teams decide with.</p></div></div>
+              </div>
+              <span class="xl-tag">Alongside my M.Tech</span>
+            </li>
+            <li class="xl-row rv" style="--i:2; --c:var(--violet)" tabindex="0">
+              <span class="xl-when">Jun 2025 — Dec 2025</span>
+              <div class="xl-main">
+                <p class="xl-role"><b>AI/ML Intern</b><span>Calsoft</span></p>
+                <div class="xl-more"><div><p>Built ML, deep learning and LLM solutions in Python, and validated models and dashboards before release.</p></div></div>
+              </div>
+            </li>
+          </ol>
+          <h3 class="xl-group rv" style="--i:3; --c:var(--warm)">Research</h3>
+          <ol class="xl">
+            <li class="xl-row rv" style="--i:4; --c:var(--warm)" tabindex="0">
+              <span class="xl-when">Mar 2025 — Jul 2026</span>
+              <div class="xl-main">
+                <p class="xl-role"><b>Thesis Researcher</b><span>Saha Institute of Nuclear Physics</span></p>
+                <div class="xl-more"><div><p>Neutron/gamma classification for a dark-matter detector: 512-D STFT features from 200 real events, SVM from scratch, up to <b>100% accuracy</b>. <a href="#index">See the project</a></p></div></div>
+              </div>
+              <span class="xl-tag">Research</span>
+            </li>
+            <li class="xl-row rv" style="--i:5; --c:var(--warm)" tabindex="0">
+              <span class="xl-when">In preparation</span>
+              <div class="xl-main">
+                <p class="xl-role"><b>Neutron vs gamma-ray acoustic signals, with ML</b><span>SINP</span></p>
+                <div class="xl-more"><div><p>Writing up the thesis results on superheated liquid detectors for publication.</p></div></div>
+              </div>
+              <span class="xl-tag">Publication</span>
+            </li>
+          </ol>
+        </div>
+      </section>
 
-          <div class="xg">
-            <div class="xg-head rv"><h3>Education</h3><span>2 degrees</span></div>
-            <ol class="xp">
-              <li class="xp-row rv" style="--c:var(--cyan); --i:0" tabindex="0">
-                <span class="xp-when">Ongoing</span>
-                <div class="xp-main">
-                  <h4>M.Tech in Robotics &amp; Artificial Intelligence</h4>
-                  <p class="xp-org">Indian Institute of Technology Guwahati</p>
-                  <div class="xp-more"><div><p class="xp-sum">Master of Technology in robotics and artificial intelligence, studied alongside my role at Calsoft.</p></div></div>
-                </div>
-                <span class="xp-tag">Alongside work</span>
-              </li>
-              <li class="xp-row rv" style="--c:var(--cyan); --i:1" tabindex="0">
-                <span class="xp-when">Completed</span>
-                <div class="xp-main">
-                  <h4>B.Tech in Electronics &amp; Communication Engineering</h4>
-                  <p class="xp-org">RCC Institute of Information Technology</p>
-                  <div class="xp-more"><div><p class="xp-sum">Bachelor of Technology, graduated with a <b>CGPA of 8.2</b>. The signals and systems foundation behind my signal-processing work.</p></div></div>
-                </div>
-              </li>
-            </ol>
-          </div>
-
-          <div class="xg">
-            <div class="xg-head rv"><h3>Work &amp; research</h3><span>4 entries</span></div>
-            <ol class="xp">
-              <li class="xp-row rv" style="--c:var(--violet); --i:0" tabindex="0">
-                <span class="xp-when">Dec 2025 – now</span>
-                <div class="xp-main">
-                  <h4>Junior Data Scientist <span class="xp-now">Current</span></h4>
-                  <p class="xp-org">Calsoft Inc.</p>
-                  <div class="xp-more"><div><p class="xp-sum">Clean and analyse real-world datasets end to end, and build the Power BI dashboards product teams decide with.</p></div></div>
-                </div>
-                <span class="xp-tag">Alongside my M.Tech</span>
-              </li>
-              <li class="xp-row rv" style="--c:var(--violet); --i:1" tabindex="0">
-                <span class="xp-when">Jun – Dec 2025</span>
-                <div class="xp-main">
-                  <h4>AI/ML Intern</h4>
-                  <p class="xp-org">Calsoft Inc.</p>
-                  <div class="xp-more"><div><p class="xp-sum">Built ML, deep learning and LLM solutions in Python, and validated models and dashboards before release.</p></div></div>
-                </div>
-              </li>
-              <li class="xp-row rv" style="--c:var(--warm); --i:2" tabindex="0">
-                <span class="xp-when">Mar 2025 – Jul 2026</span>
-                <div class="xp-main">
-                  <h4>Thesis Researcher</h4>
-                  <p class="xp-org">Saha Institute of Nuclear Physics</p>
-                  <div class="xp-more"><div><p class="xp-sum">Neutron/gamma classification for a dark-matter detector: 512-D STFT features from 200 real events, SVM from scratch, up to <b>100% accuracy</b>. <a href="#index">See the project</a></p></div></div>
-                </div>
-                <span class="xp-tag">Research</span>
-              </li>
-              <li class="xp-row rv" style="--c:var(--warm); --i:3" tabindex="0">
-                <span class="xp-when">In preparation</span>
-                <div class="xp-main">
-                  <h4>ML discrimination of neutron and gamma-ray acoustic signals</h4>
-                  <p class="xp-org">With the Saha Institute of Nuclear Physics</p>
-                  <div class="xp-more"><div><p class="xp-sum">Writing up the thesis results on superheated liquid detectors for publication.</p></div></div>
-                </div>
-                <span class="xp-tag">Publication</span>
-              </li>
-            </ol>
-          </div>
+      <section class="pg pg-xp" id="education" data-label="Education" aria-labelledby="educationH">
+        <div class="wrap">
+          <h2 class="xp-big rv" id="educationH" tabindex="-1">Education</h2>
+          <ol class="xl">
+            <li class="xl-row rv" style="--i:0; --c:var(--cyan)" tabindex="0">
+              <span class="xl-when">2026 — Ongoing</span>
+              <div class="xl-main">
+                <p class="xl-role"><b>M.Tech, Robotics &amp; Artificial Intelligence</b><span>Indian Institute of Technology Guwahati</span></p>
+                <div class="xl-more"><div><p>Master of Technology in robotics and artificial intelligence, studied alongside my role at Calsoft.</p></div></div>
+              </div>
+              <span class="xl-tag">Alongside work</span>
+            </li>
+            <li class="xl-row rv" style="--i:1; --c:var(--cyan)" tabindex="0">
+              <span class="xl-when">2022 — 2026</span>
+              <div class="xl-main">
+                <p class="xl-role"><b>B.Tech, Electronics &amp; Communication Engineering</b><span>RCC Institute of Information Technology</span></p>
+                <div class="xl-more"><div><p>Bachelor of Technology. The signals and systems foundation behind my signal-processing work.</p></div></div>
+              </div>
+              <span class="xl-tag">CGPA 8.2</span>
+            </li>
+            <li class="xl-row rv" style="--i:2; --c:var(--violet)" tabindex="0">
+              <span class="xl-when">2020 — 2022</span>
+              <div class="xl-main">
+                <p class="xl-role"><b>Higher Secondary, PCMB</b><span>Bethune Collegiate School</span></p>
+                <div class="xl-more"><div><p>Physics, chemistry, mathematics and biology.</p></div></div>
+              </div>
+              <span class="xl-tag">92%</span>
+            </li>
+            <li class="xl-row rv" style="--i:3; --c:var(--violet)" tabindex="0">
+              <span class="xl-when">2010 — 2020</span>
+              <div class="xl-main">
+                <p class="xl-role"><b>Secondary</b><span>Bethune Collegiate School</span></p>
+                <div class="xl-more"><div><p>Secondary schooling, completed in 2020.</p></div></div>
+              </div>
+              <span class="xl-tag">93%</span>
+            </li>
+          </ol>
         </div>
       </section>

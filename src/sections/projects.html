@@ -1,12 +1,12 @@
-      <!-- PROJECTS (compact). Each card opens its full view from project-details.html -->
-      <section class="band" id="projects" aria-labelledby="projectsH">
+      <!-- PROJECTS: two pages of rows. Each row opens its full view from project-details.html -->
+      <section class="pg pg-proj" id="projects" data-label="Projects" aria-labelledby="projectsH">
         <div class="wrap">
           <header class="sec-head rv">
             <h2 id="projectsH" tabindex="-1"><span>Projects</span></h2>
             <p>Five things I built and shipped, each running live. Hover a preview to scroll the real site, click to open the project.</p>
           </header>
           <div class="pcs">
-            <a class="pc rv" href="#gradient-atlas" data-cursor="Open" style="--glow:#E08A1E; --glowtxt:#E08A1E">
+            <a class="pc rv" href="#gradient-atlas" data-cursor="Open" style="--i:0; --glow:#E08A1E; --glowtxt:#E08A1E">
               <p class="pc-no"><b>01</b>Interactive ML course</p>
               <div class="pc-txt">
                 <h3>Gradient Atlas</h3>
@@ -14,9 +14,9 @@
                 <p class="pc-tags">Classical ML <i>·</i> NumPy <i>·</i> Interactive graph</p>
                 <span class="pc-go"><span class="pc-arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>View project</span>
               </div>
-              <div class="pc-shot"><div class="frame"><div class="fbar"><i></i><i></i><i></i><span>gradient-atlas.chandrima-das.com</span></div><div class="fview"><img src="assets/images/gradient-atlas.jpg" alt="Screenshot of the Gradient Atlas website" loading="lazy"></div></div></div>
+              <div class="pc-shot"><div class="frame"><div class="fbar"><i></i><i></i><i></i><span>gradient-atlas.chandrima-das.com</span></div><div class="fview"><img src="assets/images/gradient-atlas.jpg" alt="Screenshot of the Gradient Atlas website"></div></div></div>
             </a>
-            <a class="pc rv" href="#index" data-cursor="Open" style="--glow:#FF8A3D; --glowtxt:#F07A2E">
+            <a class="pc rv" href="#index" data-cursor="Open" style="--i:1; --glow:#FF8A3D; --glowtxt:#F07A2E">
               <p class="pc-no"><b>02</b>Physics research with SINP</p>
               <div class="pc-txt">
                 <h3>InDEx n/γ Discrimination</h3>
@@ -24,9 +24,9 @@
                 <p class="pc-tags">Signal processing <i>·</i> STFT <i>·</i> SVM</p>
                 <span class="pc-go"><span class="pc-arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>View project</span>
               </div>
-              <div class="pc-shot"><div class="frame"><div class="fbar"><i></i><i></i><i></i><span>neutron-gamma-detector.chandrima-das.com</span></div><div class="fview"><img src="assets/images/index-dashboard.jpg" alt="Screenshot of the InDEx neutron/gamma dashboard" loading="lazy"></div></div></div>
+              <div class="pc-shot"><div class="frame"><div class="fbar"><i></i><i></i><i></i><span>neutron-gamma-detector.chandrima-das.com</span></div><div class="fview"><img src="assets/images/index-dashboard.jpg" alt="Screenshot of the InDEx neutron/gamma dashboard"></div></div></div>
             </a>
-            <a class="pc rv" href="#plugged-in" data-cursor="Open" style="--glow:#2DD4BF; --glowtxt:#14A99A">
+            <a class="pc rv" href="#plugged-in" data-cursor="Open" style="--i:2; --glow:#2DD4BF; --glowtxt:#14A99A">
               <p class="pc-no"><b>03</b>Data analytics dashboard</p>
               <div class="pc-txt">
                 <h3>Plugged In</h3>
@@ -34,9 +34,20 @@
                 <p class="pc-tags">JavaScript <i>·</i> Data visualisation <i>·</i> EDA</p>
                 <span class="pc-go"><span class="pc-arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>View project</span>
               </div>
-              <div class="pc-shot"><div class="frame"><div class="fbar"><i></i><i></i><i></i><span>chandrima2005.github.io/analytics-dashboard-assessment</span></div><div class="fview"><img src="assets/images/plugged-in.jpg" alt="Screenshot of the Plugged In EV dashboard" loading="lazy"></div></div></div>
+              <div class="pc-shot"><div class="frame"><div class="fbar"><i></i><i></i><i></i><span>chandrima2005.github.io/analytics-dashboard-assessment</span></div><div class="fview"><img src="assets/images/plugged-in.jpg" alt="Screenshot of the Plugged In EV dashboard"></div></div></div>
             </a>
-            <a class="pc rv" href="#construction-copilot" data-cursor="Open" style="--glow:#7C6CFF; --glowtxt:#6B5BF0">
+          </div>
+        </div>
+      </section>
+
+      <section class="pg pg-proj" id="projects-more" data-label="Projects" aria-labelledby="projectsMoreH">
+        <div class="wrap">
+          <header class="sec-head rv">
+            <h2 id="projectsMoreH" tabindex="-1"><span>More projects</span></h2>
+            <p>Two more live builds, and the rest of my work on GitHub.</p>
+          </header>
+          <div class="pcs">
+            <a class="pc rv" href="#construction-copilot" data-cursor="Open" style="--i:0; --glow:#7C6CFF; --glowtxt:#6B5BF0">
               <p class="pc-no"><b>04</b>LLM agent for CAD drawings</p>
               <div class="pc-txt">
                 <h3>Construction Copilot</h3>
@@ -44,9 +55,9 @@
                 <p class="pc-tags">Python <i>·</i> Tool calling <i>·</i> RAG</p>
                 <span class="pc-go"><span class="pc-arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>View project</span>
               </div>
-              <div class="pc-shot"><div class="frame"><div class="fbar"><i></i><i></i><i></i><span>cad.chandrima-das.com</span></div><div class="fview"><img src="assets/images/construction-copilot.jpg" alt="Screenshot of Construction Copilot" loading="lazy"></div></div></div>
+              <div class="pc-shot"><div class="frame"><div class="fbar"><i></i><i></i><i></i><span>cad.chandrima-das.com</span></div><div class="fview"><img src="assets/images/construction-copilot.jpg" alt="Screenshot of Construction Copilot"></div></div></div>
             </a>
-            <a class="pc rv" href="#marginalia" data-cursor="Open" style="--glow:#E0B04A; --glowtxt:#C4921F">
+            <a class="pc rv" href="#marginalia" data-cursor="Open" style="--i:1; --glow:#E0B04A; --glowtxt:#C4921F">
               <p class="pc-no"><b>05</b>Retrieval-augmented Q&amp;A</p>
               <div class="pc-txt">
                 <h3>Marginalia</h3>
@@ -54,12 +65,12 @@
                 <p class="pc-tags">RAG <i>·</i> pdf.js <i>·</i> Netlify Functions</p>
                 <span class="pc-go"><span class="pc-arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>View project</span>
               </div>
-              <div class="pc-shot"><div class="frame"><div class="fbar"><i></i><i></i><i></i><span>rag-doc-qa-by-chandrima.netlify.app</span></div><div class="fview"><img src="assets/images/marginalia.jpg" alt="Screenshot of Marginalia" loading="lazy"></div></div></div>
+              <div class="pc-shot"><div class="frame"><div class="fbar"><i></i><i></i><i></i><span>rag-doc-qa-by-chandrima.netlify.app</span></div><div class="fview"><img src="assets/images/marginalia.jpg" alt="Screenshot of Marginalia"></div></div></div>
             </a>
-          </div>
-          <div class="more rv">
-            <div><h3>There's more on GitHub</h3><p>Computer vision, robotics and AutoML experiments, plus hackathon work.</p></div>
-            <a class="btn" href="https://github.com/Chandrima2005?tab=repositories" target="_blank" rel="noopener" data-cursor-hover>All repositories</a>
+            <div class="more rv" style="--i:2">
+              <div><h3>There's more on GitHub</h3><p>Computer vision, robotics and AutoML experiments, plus hackathon work.</p></div>
+              <a class="btn" href="https://github.com/Chandrima2005?tab=repositories" target="_blank" rel="noopener" data-cursor-hover>All repositories</a>
+            </div>
           </div>
         </div>
       </section>
