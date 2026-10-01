@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Chandrima Das · ML, Computer Vision & Signal Processing</title>
+<meta name="description" content="Chandrima Das: Master's student in Robotics & AI at IIT Guwahati and Junior Data Scientist. Projects in machine learning, signal processing, RAG and CAD analysis.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-view="home">
+
+<div id="loader" aria-hidden="true">
+  <div class="ld-word"><div class="ld-row" id="ldA"></div><div class="ld-row das" id="ldB"></div></div>
+  <p class="ld-cap" id="ldCap">Portfolio 2026</p>
+</div>
+<!-- Custom cursor, page-transition curtain and the 3D background canvas -->
+<div id="cursor" aria-hidden="true"><div class="c-dot"></div><div class="c-ring"><div class="c-box"><i></i><i></i><i></i><i></i></div><span class="c-tag"><b></b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M8 7h9v9"/></svg></span></div></div>
+<div id="curtain" aria-hidden="true"><span></span></div>
+<canvas id="gl" aria-hidden="true"></canvas>
+<!-- Top bar -->
+<header class="bar">
+  <div class="wrap">
+    <a class="brand" href="#home" data-cursor-hover>
+      <svg viewBox="0 0 28 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M1 9h6l2.5-7 4 14 3.5-10 2 3H27"/></svg>
+      Chandrima Das
+    </a>
+    <span class="here" id="here">Home</span>
+    <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="menu" data-cursor-hover><span id="menuTxt">Menu</span><span class="lines" aria-hidden="true"><i></i><i></i></span></button>
+  </div>
+</header>
+<!-- Full-screen menu -->
+<div id="menu" aria-hidden="true">
+  <div class="menu-grid">
+    <ul class="menu-links">
+      <li><a href="#home" data-link="home">Home <small>Who I am</small></a></li>
+      <li><a href="#explore" data-link="explore">Sections <small>The four doors</small></a></li>
+      <li><a href="#projects" data-link="projects">Projects <small>5 live demos</small></a></li>
+      <li><a href="#experience" data-link="experience">Experience <small>Roles and education</small></a></li>
+      <li><a href="#skills" data-link="skills">Skills <small>What I work with</small></a></li>
+      <li><a href="#contact" data-link="contact">Contact <small>Say hello</small></a></li>
+    </ul>
+    <div class="menu-side">
+      <div><h4>Email</h4><a href="mailto:daschandrima2005@gmail.com">daschandrima2005@gmail.com</a></div>
+      <div><h4>Elsewhere</h4><div class="row"><a href="https://www.linkedin.com/in/chandrima-das-298193364/" target="_blank" rel="noopener">LinkedIn</a><a href="https://github.com/Chandrima2005" target="_blank" rel="noopener">GitHub</a></div></div>
+      <button class="theme-toggle" id="themeBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><span id="themeTxt">Switch to light</span></button>
+    </div>
+  </div>
+</div>
+
+<main>
+<!-- HOME + PICKER -->
+<div class="view" data-view="home" data-label="Home" data-title="Chandrima Das · ML, Computer Vision & Signal Processing">
+  <section id="journey" aria-label="Introduction">
+    <div class="stage">
+      <div class="act act-intro" id="actIntro">
+        <div class="wrap">
+          <p class="hello"><span>Hi, I'm</span></p>
+          <h1 class="big-name" id="homeH" tabindex="-1"><span class="ln"><span>Chandrima</span></span><span class="ln"><span>Das</span></span></h1>
+          <div class="intro-foot">
+            <div class="reveal-up d1">
+              <p class="lede">A data scientist with a background in <strong>electronics and communication engineering</strong>. I work across Python, data analytics, machine learning and signal processing, and I design interfaces that make the results clear and easy to use.</p>
+              <ul class="roles">
+                <li><b>Robotics &amp; AI</b> at IIT Guwahati</li>
+                <li><b>Junior Data Scientist</b> at Calsoft</li>
+                <li><b>ML research</b> with SINP</li>
+              </ul>
+            </div>
+            <div class="cta reveal-up d2">
+              <button class="btn primary" id="toPick" data-cursor-hover>Explore my work</button>
+              <a class="btn" href="mailto:daschandrima2005@gmail.com" data-cursor-hover>Email me</a>
+            </div>
+          </div>
+        </div>
+        <div class="scroll-hint reveal-up d3"><span>Scroll</span><i></i></div>
+      </div>
+
+      <div class="act act-pick" id="actPick">
+        <h2 class="pick-head" id="pickH" tabindex="-1">Where would you like to go?</h2>
+        <p class="pick-sub">Pick one. You can always come back here.</p>
+        <nav class="picks" aria-label="Sections">
+          <a class="pick" href="#projects" data-cursor="Open">
+            <div class="pv pv-proj" aria-hidden="true">
+              <div class="scr"><img src="assets/images/thumb-plugged-in.jpg" alt=""></div>
+              <div class="scr"><img src="assets/images/thumb-construction-copilot.jpg" alt=""></div>
+              <div class="scr"><img src="assets/images/thumb-index-dashboard.jpg" alt=""></div>
+            </div>
+            <span class="pick-t">Projects</span>
+            <span class="pick-s">5 live demos <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </a>
+          <a class="pick" href="#experience" data-cursor="Open">
+            <div class="pv pv-exp" aria-hidden="true">
+              <svg viewBox="0 0 120 70" fill="none">
+                <path d="M6 58 C 30 58, 30 16, 60 30 S 96 8, 114 12" stroke="var(--line)" stroke-width="2"/>
+                <path class="trk" d="M6 58 C 30 58, 30 16, 60 30 S 96 8, 114 12" stroke="var(--violet)" stroke-width="2"/>
+                <circle class="node" cx="6" cy="58" r="5" fill="var(--solid)" stroke="var(--violet)" stroke-width="2"/>
+                <circle class="node" cx="60" cy="30" r="5" fill="var(--solid)" stroke="var(--violet)" stroke-width="2"/>
+                <circle class="node" cx="114" cy="12" r="5" fill="var(--solid)" stroke="var(--violet)" stroke-width="2"/>
+                <circle r="4" fill="var(--cyan)"><animateMotion dur="3.2s" repeatCount="indefinite" path="M6 58 C 30 58, 30 16, 60 30 S 96 8, 114 12"/></circle>
+              </svg>
+            </div>
+            <span class="pick-t">Experience</span>
+            <span class="pick-s">Roles &amp; education <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </a>
+          <a class="pick" href="#skills" data-cursor="Open">
+            <div class="pv pv-atom" aria-hidden="true">
+              <svg viewBox="0 0 100 100" fill="none">
+                <g class="orb"><ellipse cx="50" cy="50" rx="44" ry="15" stroke="var(--line)" stroke-width="1.5"/><circle cx="94" cy="50" r="4" fill="var(--violet)"/></g>
+                <g class="orb"><ellipse cx="50" cy="50" rx="44" ry="15" stroke="var(--line)" stroke-width="1.5" transform="rotate(60 50 50)"/><circle cx="72" cy="88" r="4" fill="var(--cyan)"/></g>
+                <g class="orb"><ellipse cx="50" cy="50" rx="44" ry="15" stroke="var(--line)" stroke-width="1.5" transform="rotate(120 50 50)"/><circle cx="28" cy="88" r="4" fill="var(--warm)"/></g>
+                <circle class="nuc" cx="50" cy="50" r="8" fill="var(--violet)"/>
+              </svg>
+            </div>
+            <span class="pick-t">Skills</span>
+            <span class="pick-s">6 areas <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </a>
+          <a class="pick" href="#contact" data-cursor="Open">
+            <div class="pv pv-radar" aria-hidden="true">
+              <span class="ring"></span><span class="ring"></span><span class="ring"></span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+            </div>
+            <span class="pick-t">Contact</span>
+            <span class="pick-s">Say hello <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </a>
+        </nav>
+      </div>
+
+      <div class="act act-signal" id="actSignal">
+        <div class="wrap">
+          <p class="signal-line"><span>Noise is loud.</span><span>Signal is patient.</span></p>
+          <p class="signal-sub">I believe smart work pays off only when it is built on hard work. I adapt quickly to new problems, tools and roles, and I bring the same care to each of them.</p>
+        </div>
+      </div>
+
+      <div class="act act-foot" id="actFoot">
+        <div class="wrap">
+          <p class="ft-big">Thanks for<br>tuning in.</p>
+          <div class="ft-grid">
+            <div class="ft-lead">
+              <p class="ft-sub">Open to roles, research collaborations and interesting problems in machine learning, computer vision and signal processing.</p>
+              <a class="ft-mail" href="mailto:daschandrima2005@gmail.com" data-cursor="Write"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>daschandrima2005@gmail.com</a>
+            </div>
+            <nav class="ft-col" aria-label="Pages"><h4>Explore</h4><a href="#projects">Projects</a><a href="#experience">Experience</a><a href="#skills">Skills</a><a href="#contact">Contact</a></nav>
+            <div class="ft-col"><h4>Elsewhere</h4><a href="https://www.linkedin.com/in/chandrima-das-298193364/" target="_blank" rel="noopener">LinkedIn</a><a href="https://github.com/Chandrima2005" target="_blank" rel="noopener">GitHub</a></div>
+            <div class="ft-col"><h4>Currently</h4><p>Master's in Robotics &amp; AI, IIT Guwahati</p><p>Junior Data Scientist, Calsoft</p></div>
+          </div>
+          <div class="ft-bottom"><span>© 2026 Chandrima Das</span><span class="ft-quote">Progress is a thousand small gaps, closed.</span><button class="ft-top" id="toTop" data-cursor-hover><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg>Back to top</button></div>
+        </div>
+      </div>
+
+      <div class="dots" id="dots" aria-label="Introduction progress">
+        <button data-a="0" aria-label="Intro"><span>Intro</span></button>
+        <button data-a="1" aria-label="Choose a section"><span>Choose</span></button>
+        <button data-a="2" aria-label="Signal"><span>Signal</span></button>
+        <button data-a="3" aria-label="Get in touch"><span>Say hello</span></button>
+      </div>
+    </div>
+  </section>
+</div>
+<!-- PROJECTS -->
+<div class="view" data-view="projects" data-label="Projects" data-title="Projects · Chandrima Das">
+  <section class="page">
+    <div class="wrap">
+      <header class="page-head">
+        <h1 tabindex="-1"><span>Projects</span></h1>
+        <p>Five things I built and shipped, each running live. Hover a preview to scroll through the real site.</p>
+      </header>
+
+      <article class="proj" style="--glow:#E08A1E; --glowtxt:#E08A1E">
+        <a class="shot" href="https://gradient-atlas.chandrima-das.com/" target="_blank" rel="noopener" data-cursor="Visit">
+          <div class="frame"><div class="fbar"><i></i><i></i><i></i><span>gradient-atlas.chandrima-das.com</span></div><div class="fview"><img src="assets/images/gradient-atlas.jpg" alt="Screenshot of the Gradient Atlas website"></div></div>
+          <span class="visit">Open live site</span>
+        </a>
+        <div class="ptext">
+          <p class="kind">Interactive ML course</p>
+          <h2>Gradient Atlas</h2>
+          <p class="tagline">Learn ML by building it, not memorising it.</p>
+          <p class="desc">24 chapters of classical machine learning as an explorable map, study route, flashcards and a Python-style console. You write each algorithm in plain NumPy, then check it against scikit-learn.</p>
+          <ul class="facts"><li><b>439</b>linked sections</li><li><b>512</b>flashcards</li><li><b>665</b>quiz questions</li></ul>
+          <ul class="tags"><li>Classical ML</li><li>NumPy</li><li>Interactive graph</li><li>Spaced repetition</li></ul>
+          <div class="plinks"><a class="btn primary" href="https://gradient-atlas.chandrima-das.com/" target="_blank" rel="noopener" data-cursor-hover>Live demo</a><a class="btn" href="https://github.com/Chandrima2005/Gradient-atlas" target="_blank" rel="noopener" data-cursor-hover>Source</a></div>
+        </div>
+      </article>
+
+      <article class="proj" style="--glow:#FF8A3D; --glowtxt:#F07A2E">
+        <a class="shot" href="https://neutron-gamma-detector.chandrima-das.com/" target="_blank" rel="noopener" data-cursor="Visit">
+          <div class="frame"><div class="fbar"><i></i><i></i><i></i><span>neutron-gamma-detector.chandrima-das.com</span></div><div class="fview"><img src="assets/images/index-dashboard.jpg" alt="Screenshot of the InDEx neutron/gamma dashboard"></div></div>
+          <span class="visit">Open dashboard</span>
+        </a>
+        <div class="ptext">
+          <p class="kind">Physics research with SINP</p>
+          <h2>InDEx n/γ Discrimination</h2>
+          <p class="tagline">A neutron's acoustic signature versus a gamma ray's.</p>
+          <p class="desc">My thesis work for a superheated-liquid dark-matter detector: pulse localisation, STFT features, and logistic regression and SVM written from scratch. Drop in a waveform and it classifies it in your browser.</p>
+          <ul class="facts"><li><b>512-D</b>STFT features</li><li><b>200</b>real detector events</li><li><b>100%</b>peak accuracy</li></ul>
+          <ul class="tags"><li>Signal processing</li><li>STFT</li><li>SVM</li><li>In-browser ML</li></ul>
+          <div class="plinks"><a class="btn primary" href="https://neutron-gamma-detector.chandrima-das.com/" target="_blank" rel="noopener" data-cursor-hover>Live demo</a><a class="btn" href="https://github.com/Chandrima2005/neutron-gamma-detector" target="_blank" rel="noopener" data-cursor-hover>Source</a></div>
+        </div>
+      </article>
+
+      <article class="proj" style="--glow:#2DD4BF; --glowtxt:#14A99A">
+        <a class="shot" href="https://chandrima2005.github.io/analytics-dashboard-assessment/" target="_blank" rel="noopener" data-cursor="Visit">
+          <div class="frame"><div class="fbar"><i></i><i></i><i></i><span>chandrima2005.github.io/analytics-dashboard-assessment</span></div><div class="fview"><img src="assets/images/plugged-in.jpg" alt="Screenshot of the Plugged In EV dashboard"></div></div>
+          <span class="visit">Open dashboard</span>
+        </a>
+        <div class="ptext">
+          <p class="kind">Data analytics dashboard</p>
+          <h2>Plugged In</h2>
+          <p class="tagline">Washington State's electric vehicles, in one dashboard.</p>
+          <p class="desc">Every number, chart and written insight is calculated in the browser from the raw CSV, so a newer data export updates the whole site with no code changes.</p>
+          <ul class="facts"><li><b>50,000</b>vehicles analysed</li><li><b>0</b>hard-coded numbers</li><li><b>2</b>live deployments</li></ul>
+          <ul class="tags"><li>JavaScript</li><li>Data visualisation</li><li>EDA</li></ul>
+          <div class="plinks"><a class="btn primary" href="https://chandrima2005.github.io/analytics-dashboard-assessment/" target="_blank" rel="noopener" data-cursor-hover>Live demo</a><a class="btn" href="https://github.com/Chandrima2005/analytics-dashboard-assessment" target="_blank" rel="noopener" data-cursor-hover>Source</a></div>
+        </div>
+      </article>
+
+      <article class="proj" style="--glow:#7C6CFF; --glowtxt:#6B5BF0">
+        <a class="shot" href="https://cad.chandrima-das.com/" target="_blank" rel="noopener" data-cursor="Visit">
+          <div class="frame"><div class="fbar"><i></i><i></i><i></i><span>cad.chandrima-das.com</span></div><div class="fview"><img src="assets/images/construction-copilot.jpg" alt="Screenshot of Construction Copilot"></div></div>
+          <span class="visit">Open app</span>
+        </a>
+        <div class="ptext">
+          <p class="kind">LLM agent for CAD drawings</p>
+          <h2>Construction Copilot</h2>
+          <p class="tagline">Measured, not guessed.</p>
+          <p class="desc">Ask building plans, distribution boards and circuits anything in plain English. Deterministic tools measure every number from the DXF, and hybrid search cites the exact spec clause for pass or fail checks.</p>
+          <ul class="facts"><li><b>20</b>measurement tools</li><li><b>Hybrid</b>BM25 + vector search</li><li><b>Offline</b>desktop mode</li></ul>
+          <ul class="tags"><li>Python</li><li>ezdxf</li><li>Tool calling</li><li>RAG</li><li>Vision model</li></ul>
+          <div class="plinks"><a class="btn primary" href="https://cad.chandrima-das.com/" target="_blank" rel="noopener" data-cursor-hover>Live demo</a><a class="btn" href="https://github.com/Chandrima2005/pdfdxf2summery" target="_blank" rel="noopener" data-cursor-hover>Source</a></div>
+        </div>
+      </article>
+
+      <article class="proj" style="--glow:#E0B04A; --glowtxt:#C4921F">
+        <a class="shot" href="https://rag-doc-qa-by-chandrima.netlify.app/" target="_blank" rel="noopener" data-cursor="Visit">
+          <div class="frame"><div class="fbar"><i></i><i></i><i></i><span>rag-doc-qa-by-chandrima.netlify.app</span></div><div class="fview"><img src="assets/images/marginalia.jpg" alt="Screenshot of Marginalia"></div></div>
+          <span class="visit">Try it</span>
+        </a>
+        <div class="ptext">
+          <p class="kind">Retrieval-augmented Q&amp;A</p>
+          <h2>Marginalia</h2>
+          <p class="tagline">Ask the document, not the internet.</p>
+          <p class="desc">Upload a PDF and get answers grounded only in its most relevant passages. Parsing happens in the browser, and embeddings live in Netlify Blobs, so there's no external vector database.</p>
+          <ul class="facts"><li><b>Top 4</b>passages per answer</li><li><b>0</b>servers to manage</li><li><b>Gemini</b>embeddings</li></ul>
+          <ul class="tags"><li>RAG</li><li>pdf.js</li><li>Netlify Functions</li></ul>
+          <div class="plinks"><a class="btn primary" href="https://rag-doc-qa-by-chandrima.netlify.app/" target="_blank" rel="noopener" data-cursor-hover>Live demo</a><a class="btn" href="https://github.com/Chandrima2005/rag-doc-qa" target="_blank" rel="noopener" data-cursor-hover>Source</a></div>
+        </div>
+      </article>
+
+      <div class="more rv">
+        <div><h3>There's more on GitHub</h3><p>Computer vision, robotics and AutoML experiments, plus hackathon work.</p></div>
+        <a class="btn" href="https://github.com/Chandrima2005?tab=repositories" target="_blank" rel="noopener" data-cursor-hover>All repositories</a>
+      </div>
+      <div class="return">
+        <a class="ret-ring" href="#explore" aria-label="Back to choices" data-cursor="Choices">
+          <svg viewBox="0 0 120 120" aria-hidden="true"><circle class="rbg" cx="60" cy="60" r="54"/><circle class="rpr" cx="60" cy="60" r="54"/></svg>
+          <span class="ret-ic" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        </a>
+        <p class="ret-t"><span class="ret-a">Keep scrolling to go back to the choices</span><span class="ret-b">Taking you back</span></p>
+        <p class="ret-or">or jump to <a href="#experience">Experience</a><a href="#skills">Skills</a><a href="#contact">Contact</a></p>
+      </div>
+      <div class="foot"><span>© 2026 Chandrima Das</span><span>Progress is a thousand small gaps, closed.</span></div>
+    </div>
+  </section>
+</div>
+<!-- EXPERIENCE -->
+<div class="view" data-view="experience" data-label="Experience" data-title="Experience · Chandrima Das">
+  <section class="page">
+    <div class="wrap">
+      <header class="page-head">
+        <h1 tabindex="-1"><span>Experience</span></h1>
+        <p>Industry data science, physics research, and a master's degree in robotics running alongside both.</p>
+      </header>
+      <div class="tstats rv">
+        <div><b data-count="3">3</b><span>roles in industry and research</span></div>
+        <div><b data-count="2">2</b><span>engineering degrees</span></div>
+        <div><b data-count="1">1</b><span>publication in preparation</span></div>
+      </div>
+      <div class="tfilter rv" role="group" aria-label="Filter timeline">
+        <button class="on" data-f="all">All</button><button data-f="work">Work</button><button data-f="research">Research</button><button data-f="education">Education</button><button data-f="publication">Publication</button>
+      </div>
+      <div class="tline" id="tline">
+        <span class="tfill" aria-hidden="true"></span>
+        <ol class="tl-list">
+          <li class="tl-item l rv" data-type="work" style="--c:#A77BFF">
+            <span class="tl-dot" aria-hidden="true"></span>
+            <span class="tl-when">Dec 2025 to present</span>
+            <div class="tl-card">
+              <div class="tl-top"><span class="tl-type">Work</span><span class="tl-now">Current</span><span class="tl-when-m">Dec 2025 to present</span></div>
+              <h3>Junior Data Scientist</h3>
+              <p class="tl-org"><span class="tl-logo" aria-hidden="true">Cs</span><span>Calsoft Inc.</span></p>
+              <ul class="tl-pts"><li>Clean and analyse real-world datasets from end to end.</li><li>Build Power BI dashboards that product teams use to make decisions.</li></ul>
+              <div class="tl-more"><div><ul class="tl-tags"><li>Python</li><li>Pandas</li><li>Power BI</li><li>EDA</li></ul></div></div>
+            </div>
+          </li><li class="tl-item r rv" data-type="education" style="--c:#45D6F0">
+            <span class="tl-dot" aria-hidden="true"></span>
+            <span class="tl-when">Ongoing</span>
+            <div class="tl-card">
+              <div class="tl-top"><span class="tl-type">Education</span><span class="tl-when-m">Ongoing</span></div>
+              <h3>Master's in Robotics &amp; Artificial Intelligence</h3>
+              <p class="tl-org"><span class="tl-logo" aria-hidden="true">IITG</span><span>Indian Institute of Technology Guwahati</span></p>
+              <ul class="tl-pts"><li>Postgraduate study in robotics and artificial intelligence.</li></ul>
+              <div class="tl-more"><div><ul class="tl-tags"><li>Robotics</li><li>Machine learning</li><li>AI</li></ul></div></div>
+            </div>
+          </li><li class="tl-item l rv" data-type="publication" style="--c:#FF8A5C">
+            <span class="tl-dot" aria-hidden="true"></span>
+            <span class="tl-when">In preparation</span>
+            <div class="tl-card">
+              <div class="tl-top"><span class="tl-type">Publication</span><span class="tl-when-m">In preparation</span></div>
+              <h3>ML-based discrimination of neutron and gamma-ray acoustic signals</h3>
+              <p class="tl-org"><span class="tl-logo" aria-hidden="true">📄</span><span>With the Saha Institute of Nuclear Physics</span></p>
+              <ul class="tl-pts"><li>Machine Learning–Based Discrimination of Neutron and Gamma-Ray Induced Acoustic Signals in Superheated Liquid Detectors.</li><li>Writing up the thesis results for publication.</li></ul>
+              <div class="tl-more"><div><ul class="tl-tags"><li>Manuscript in preparation</li></ul></div></div>
+            </div>
+          </li><li class="tl-item r rv" data-type="research" style="--c:#FF8A5C">
+            <span class="tl-dot" aria-hidden="true"></span>
+            <span class="tl-when">Mar 2025 to Jul 2026</span>
+            <div class="tl-card">
+              <div class="tl-top"><span class="tl-type">Research</span><span class="tl-when-m">Mar 2025 to Jul 2026</span></div>
+              <h3>Thesis Researcher</h3>
+              <p class="tl-org"><span class="tl-logo" aria-hidden="true">SINP</span><span>Saha Institute of Nuclear Physics</span></p>
+              <ul class="tl-pts"><li>Built an end-to-end neutron/gamma classification pipeline for a superheated-liquid dark-matter detector.</li><li>Extracted 512-D STFT features from 200 real detector events.</li><li>Wrote logistic regression and SVM from scratch, reaching up to <b>100% accuracy</b>.</li></ul>
+              <div class="tl-more"><div><ul class="tl-tags"><li>Signal processing</li><li>STFT</li><li>SVM</li><li>Research</li></ul><a class="tl-link" href="https://neutron-gamma-detector.chandrima-das.com/" target="_blank" rel="noopener" data-cursor="Visit">See the live dashboard</a></div></div>
+            </div>
+          </li><li class="tl-item l rv" data-type="work" style="--c:#A77BFF">
+            <span class="tl-dot" aria-hidden="true"></span>
+            <span class="tl-when">Jun 2025 to Dec 2025</span>
+            <div class="tl-card">
+              <div class="tl-top"><span class="tl-type">Work</span><span class="tl-when-m">Jun 2025 to Dec 2025</span></div>
+              <h3>AI/ML Intern</h3>
+              <p class="tl-org"><span class="tl-logo" aria-hidden="true">Cs</span><span>Calsoft Inc.</span></p>
+              <ul class="tl-pts"><li>Developed machine learning, deep learning and LLM solutions in Python.</li><li>Validated models and dashboards before release.</li></ul>
+              <div class="tl-more"><div><ul class="tl-tags"><li>Deep learning</li><li>LLMs</li><li>Model validation</li></ul></div></div>
+            </div>
+          </li><li class="tl-item r rv" data-type="education" style="--c:#45D6F0">
+            <span class="tl-dot" aria-hidden="true"></span>
+            <span class="tl-when">B.Tech</span>
+            <div class="tl-card">
+              <div class="tl-top"><span class="tl-type">Education</span><span class="tl-when-m">B.Tech</span></div>
+              <h3>B.Tech in Electronics &amp; Communication Engineering</h3>
+              <p class="tl-org"><span class="tl-logo" aria-hidden="true">RCC</span><span>RCC Institute of Information Technology</span></p>
+              <ul class="tl-pts"><li>Graduated with a <b>CGPA of 8.2</b>.</li><li>The signals and systems foundation behind my signal-processing work.</li></ul>
+              <div class="tl-more"><div><ul class="tl-tags"><li>Electronics</li><li>Signals &amp; systems</li><li>Communication</li></ul></div></div>
+            </div>
+          </li>
+        </ol>
+      </div>
+      <div class="return">
+        <a class="ret-ring" href="#explore" aria-label="Back to choices" data-cursor="Choices">
+          <svg viewBox="0 0 120 120" aria-hidden="true"><circle class="rbg" cx="60" cy="60" r="54"/><circle class="rpr" cx="60" cy="60" r="54"/></svg>
+          <span class="ret-ic" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        </a>
+        <p class="ret-t"><span class="ret-a">Keep scrolling to go back to the choices</span><span class="ret-b">Taking you back</span></p>
+        <p class="ret-or">or jump to <a href="#projects">Projects</a><a href="#skills">Skills</a><a href="#contact">Contact</a></p>
+      </div>
+      <div class="foot"><span>© 2026 Chandrima Das</span><span>Progress is a thousand small gaps, closed.</span></div>
+    </div>
+  </section>
+</div>
+<!-- SKILLS -->
+<div class="view" data-view="skills" data-label="Skills" data-title="Skills · Chandrima Das">
+  <section class="page">
+    <div class="wrap">
+      <header class="page-head">
+        <h1 tabindex="-1"><span>Skills</span></h1>
+        <p>Six areas I work across. Hover or tap a panel to open it.</p>
+      </header>
+      <div class="deck" id="deck">
+        <div class="sk on" data-anim="net" role="button" tabindex="0" aria-expanded="true"><canvas></canvas><span class="vt">Machine learning</span><div class="body"><h3>Machine learning</h3><p>Classical ML from scratch, SVMs, logistic regression, AutoML pipelines and careful model validation.</p><ul><li>scikit-learn</li><li>NumPy</li><li>TensorFlow</li></ul></div></div>
+        <div class="sk" data-anim="cv" role="button" tabindex="0" aria-expanded="false"><canvas></canvas><span class="vt">Computer vision</span><div class="body"><h3>Computer vision</h3><p>YOLOv8 detection, OCR, stereo depth estimation, and image and video pipelines.</p><ul><li>OpenCV</li><li>YOLOv8</li><li>EasyOCR</li></ul></div></div>
+        <div class="sk" data-anim="llm" role="button" tabindex="0" aria-expanded="false"><canvas></canvas><span class="vt">LLMs &amp; Gen AI</span><div class="body"><h3>LLMs &amp; generative AI</h3><p>RAG systems, tool calling, and LLM-assisted feature selection and error correction.</p><ul><li>LangChain</li><li>Gemini</li><li>Embeddings</li></ul></div></div>
+        <div class="sk" data-anim="sig" role="button" tabindex="0" aria-expanded="false"><canvas></canvas><span class="vt">Signal processing</span><div class="body"><h3>Signal processing</h3><p>STFT feature extraction, pulse localisation and physics-grade classification.</p><ul><li>STFT</li><li>Spectrograms</li><li>Matplotlib</li></ul></div></div>
+        <div class="sk" data-anim="bi" role="button" tabindex="0" aria-expanded="false"><canvas></canvas><span class="vt">Data &amp; BI</span><div class="body"><h3>Data &amp; BI</h3><p>Cleaning messy real-world data, exploratory analysis and dashboards that drive decisions.</p><ul><li>Pandas</li><li>Power BI</li><li>EDA</li></ul></div></div>
+        <div class="sk" data-anim="ship" role="button" tabindex="0" aria-expanded="false"><canvas></canvas><span class="vt">Shipping it</span><div class="body"><h3>Shipping it</h3><p>Interactive web dashboards, in-browser ML, Flask apps, and deployments on Netlify and Vercel.</p><ul><li>JavaScript</li><li>Flask</li><li>Netlify</li><li>Git</li></ul></div></div>
+      </div>
+      <div class="marquee" aria-label="Tools">
+        <div class="mrow"><span>Python</span><span>scikit-learn</span><span>NumPy</span><span>Pandas</span><span>TensorFlow</span><span>OpenCV</span><span>YOLOv8</span><span>LangChain</span><span>Gemini</span><span>Power BI</span><span>Python</span><span>scikit-learn</span><span>NumPy</span><span>Pandas</span><span>TensorFlow</span><span>OpenCV</span><span>YOLOv8</span><span>LangChain</span><span>Gemini</span><span>Power BI</span></div>
+        <div class="mrow rev"><span>JavaScript</span><span>HTML</span><span>CSS</span><span>Tailwind</span><span>Flask</span><span>Matplotlib</span><span>EasyOCR</span><span>Netlify</span><span>Vercel</span><span>Git</span><span>Linux</span><span>JavaScript</span><span>HTML</span><span>CSS</span><span>Tailwind</span><span>Flask</span><span>Matplotlib</span><span>EasyOCR</span><span>Netlify</span><span>Vercel</span><span>Git</span><span>Linux</span></div>
+      </div>
+      <div class="return">
+        <a class="ret-ring" href="#explore" aria-label="Back to choices" data-cursor="Choices">
+          <svg viewBox="0 0 120 120" aria-hidden="true"><circle class="rbg" cx="60" cy="60" r="54"/><circle class="rpr" cx="60" cy="60" r="54"/></svg>
+          <span class="ret-ic" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        </a>
+        <p class="ret-t"><span class="ret-a">Keep scrolling to go back to the choices</span><span class="ret-b">Taking you back</span></p>
+        <p class="ret-or">or jump to <a href="#projects">Projects</a><a href="#experience">Experience</a><a href="#contact">Contact</a></p>
+      </div>
+      <div class="foot"><span>© 2026 Chandrima Das</span><span>Progress is a thousand small gaps, closed.</span></div>
+    </div>
+  </section>
+</div>
+<!-- CONTACT -->
+<div class="view" data-view="contact" data-label="Contact" data-title="Contact · Chandrima Das">
+  <section class="page contact-page">
+    <canvas id="radar" aria-hidden="true"></canvas>
+    <div class="wrap">
+      <header class="page-head">
+        <h1 tabindex="-1"><span>Contact</span></h1>
+        <p>Whether it's a role, a research collaboration or a question about my work, I'd be glad to hear from you.</p>
+      </header>
+      <div class="ct-grid">
+        <div class="ct-intro rv">
+          <h2 class="ct-h">Let's work together.</h2>
+          <p>I'm open to opportunities in data science, machine learning and analytics, as well as research collaborations and roles in education. Email is the quickest way to reach me.</p>
+          <p class="ct-lbl">Open to</p>
+          <ul class="ct-open"><li>Data science &amp; analytics roles</li><li>Machine learning projects</li><li>Research collaborations</li><li>Teaching &amp; education</li></ul>
+        </div>
+        <div class="ct-list rv">
+          <div class="ct-row" style="--c:var(--violet)">
+            <a class="ct-main" href="mailto:daschandrima2005@gmail.com" data-cursor="Write">
+              <span class="ct-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span>
+              <span class="ct-txt"><span class="ct-k">Email</span><span class="ct-v">daschandrima2005@gmail.com</span></span>
+              <svg class="ct-arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg>
+            </a>
+            <button class="ct-copy" id="copyMail" data-cursor-hover aria-label="Copy email address"><span>Copy</span></button>
+          </div>
+          <div class="ct-row" style="--c:#3B8FE8">
+            <a class="ct-main" href="https://www.linkedin.com/in/chandrima-das-298193364/" target="_blank" rel="noopener" data-cursor="Visit">
+              <span class="ct-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.06c.53-1 1.83-2.06 3.77-2.06 4.03 0 4.77 2.65 4.77 6.1V21h-4v-5.1c0-1.22-.02-2.78-1.7-2.78-1.7 0-1.96 1.33-1.96 2.7V21h-4z"/></svg></span>
+              <span class="ct-txt"><span class="ct-k">LinkedIn</span><span class="ct-v">Chandrima Das</span></span>
+              <svg class="ct-arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg>
+            </a>
+          </div>
+          <div class="ct-row" style="--c:var(--cyan)">
+            <a class="ct-main" href="https://github.com/Chandrima2005" target="_blank" rel="noopener" data-cursor="Visit">
+              <span class="ct-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.42c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.4-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg></span>
+              <span class="ct-txt"><span class="ct-k">GitHub</span><span class="ct-v">Chandrima2005</span></span>
+              <svg class="ct-arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="return">
+        <a class="ret-ring" href="#explore" aria-label="Back to choices" data-cursor="Choices">
+          <svg viewBox="0 0 120 120" aria-hidden="true"><circle class="rbg" cx="60" cy="60" r="54"/><circle class="rpr" cx="60" cy="60" r="54"/></svg>
+          <span class="ret-ic" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        </a>
+        <p class="ret-t"><span class="ret-a">Keep scrolling to go back to the choices</span><span class="ret-b">Taking you back</span></p>
+        <p class="ret-or">or jump to <a href="#projects">Projects</a><a href="#experience">Experience</a><a href="#skills">Skills</a></p>
+      </div>
+      <div class="foot"><span>© 2026 Chandrima Das</span><span>Progress is a thousand small gaps, closed.</span></div>
+    </div>
+  </section>
+</div>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
