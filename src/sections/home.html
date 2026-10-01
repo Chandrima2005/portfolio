@@ -1,8 +1,8 @@
-<!-- HOME + PICKER -->
+<!-- HOME: intro, then every section on one page -->
 <div class="view" data-view="home" data-label="Home" data-title="Chandrima Das · ML, Computer Vision & Signal Processing">
-  <section id="journey" aria-label="Introduction">
+  <section id="journey" aria-label="Chandrima Das">
     <div class="stage">
-      <div class="act act-intro" id="actIntro">
+      <div class="act act-intro" id="home">
         <div class="wrap">
           <p class="hello"><span>Hi, I'm</span></p>
           <h1 class="big-name" id="homeH" tabindex="-1"><span class="ln"><span>Chandrima</span></span><span class="ln"><span>Das</span></span></h1>
@@ -16,7 +16,7 @@
               </ul>
             </div>
             <div class="cta reveal-up d2">
-              <button class="btn primary" id="toPick" data-cursor-hover>Explore my work</button>
+              <a class="btn primary" href="#projects" data-cursor-hover>Explore my work</a>
               <a class="btn" href="mailto:daschandrima2005@gmail.com" data-cursor-hover>Email me</a>
             </div>
           </div>
@@ -24,55 +24,9 @@
         <div class="scroll-hint reveal-up d3"><span>Scroll</span><i></i></div>
       </div>
 
-      <div class="act act-pick" id="actPick">
-        <h2 class="pick-head" id="pickH" tabindex="-1">Where would you like to go?</h2>
-        <p class="pick-sub">Pick one. You can always come back here.</p>
-        <nav class="picks" aria-label="Sections">
-          <a class="pick" href="#projects" data-cursor="Open">
-            <div class="pv pv-proj" aria-hidden="true">
-              <div class="scr"><img src="assets/images/thumb-plugged-in.jpg" alt=""></div>
-              <div class="scr"><img src="assets/images/thumb-construction-copilot.jpg" alt=""></div>
-              <div class="scr"><img src="assets/images/thumb-index-dashboard.jpg" alt=""></div>
-            </div>
-            <span class="pick-t">Projects</span>
-            <span class="pick-s">5 live demos <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-          </a>
-          <a class="pick" href="#experience" data-cursor="Open">
-            <div class="pv pv-exp" aria-hidden="true">
-              <svg viewBox="0 0 120 70" fill="none">
-                <path d="M6 58 C 30 58, 30 16, 60 30 S 96 8, 114 12" stroke="var(--line)" stroke-width="2"/>
-                <path class="trk" d="M6 58 C 30 58, 30 16, 60 30 S 96 8, 114 12" stroke="var(--violet)" stroke-width="2"/>
-                <circle class="node" cx="6" cy="58" r="5" fill="var(--solid)" stroke="var(--violet)" stroke-width="2"/>
-                <circle class="node" cx="60" cy="30" r="5" fill="var(--solid)" stroke="var(--violet)" stroke-width="2"/>
-                <circle class="node" cx="114" cy="12" r="5" fill="var(--solid)" stroke="var(--violet)" stroke-width="2"/>
-                <circle r="4" fill="var(--cyan)"><animateMotion dur="3.2s" repeatCount="indefinite" path="M6 58 C 30 58, 30 16, 60 30 S 96 8, 114 12"/></circle>
-              </svg>
-            </div>
-            <span class="pick-t">Experience</span>
-            <span class="pick-s">Roles &amp; education <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-          </a>
-          <a class="pick" href="#skills" data-cursor="Open">
-            <div class="pv pv-atom" aria-hidden="true">
-              <svg viewBox="0 0 100 100" fill="none">
-                <g class="orb"><ellipse cx="50" cy="50" rx="44" ry="15" stroke="var(--line)" stroke-width="1.5"/><circle cx="94" cy="50" r="4" fill="var(--violet)"/></g>
-                <g class="orb"><ellipse cx="50" cy="50" rx="44" ry="15" stroke="var(--line)" stroke-width="1.5" transform="rotate(60 50 50)"/><circle cx="72" cy="88" r="4" fill="var(--cyan)"/></g>
-                <g class="orb"><ellipse cx="50" cy="50" rx="44" ry="15" stroke="var(--line)" stroke-width="1.5" transform="rotate(120 50 50)"/><circle cx="28" cy="88" r="4" fill="var(--warm)"/></g>
-                <circle class="nuc" cx="50" cy="50" r="8" fill="var(--violet)"/>
-              </svg>
-            </div>
-            <span class="pick-t">Skills</span>
-            <span class="pick-s">6 areas <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-          </a>
-          <a class="pick" href="#contact" data-cursor="Open">
-            <div class="pv pv-radar" aria-hidden="true">
-              <span class="ring"></span><span class="ring"></span><span class="ring"></span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
-            </div>
-            <span class="pick-t">Contact</span>
-            <span class="pick-s">Say hello <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-          </a>
-        </nav>
-      </div>
+<!-- include: sections/projects.html -->
+<!-- include: sections/experience.html -->
+<!-- include: sections/skills.html -->
 
       <div class="act act-signal" id="actSignal">
         <div class="wrap">
@@ -81,28 +35,15 @@
         </div>
       </div>
 
-      <div class="act act-foot" id="actFoot">
-        <div class="wrap">
-          <p class="ft-big">Thanks for<br>tuning in.</p>
-          <div class="ft-grid">
-            <div class="ft-lead">
-              <p class="ft-sub">Open to roles, research collaborations and interesting problems in machine learning, computer vision and signal processing.</p>
-              <a class="ft-mail" href="mailto:daschandrima2005@gmail.com" data-cursor="Write"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>daschandrima2005@gmail.com</a>
-            </div>
-            <nav class="ft-col" aria-label="Pages"><h4>Explore</h4><a href="#projects">Projects</a><a href="#experience">Experience</a><a href="#skills">Skills</a><a href="#contact">Contact</a></nav>
-            <div class="ft-col"><h4>Elsewhere</h4><a href="https://www.linkedin.com/in/chandrima-das-298193364/" target="_blank" rel="noopener">LinkedIn</a><a href="https://github.com/Chandrima2005" target="_blank" rel="noopener">GitHub</a></div>
-            <div class="ft-col"><h4>Currently</h4><p>Master's in Robotics &amp; AI, IIT Guwahati</p><p>Junior Data Scientist, Calsoft</p></div>
-          </div>
-          <div class="ft-bottom"><span>© 2026 Chandrima Das</span><span class="ft-quote">Progress is a thousand small gaps, closed.</span><button class="ft-top" id="toTop" data-cursor-hover><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg>Back to top</button></div>
-        </div>
-      </div>
+<!-- include: sections/contact.html -->
 
-      <div class="dots" id="dots" aria-label="Introduction progress">
-        <button data-a="0" aria-label="Intro"><span>Intro</span></button>
-        <button data-a="1" aria-label="Choose a section"><span>Choose</span></button>
-        <button data-a="2" aria-label="Signal"><span>Signal</span></button>
-        <button data-a="3" aria-label="Get in touch"><span>Say hello</span></button>
-      </div>
+      <nav class="dots" id="dots" aria-label="Sections on this page">
+        <a href="#home" data-s="home"><span>Intro</span></a>
+        <a href="#projects" data-s="projects"><span>Projects</span></a>
+        <a href="#experience" data-s="experience"><span>Experience</span></a>
+        <a href="#skills" data-s="skills"><span>Skills</span></a>
+        <a href="#contact" data-s="contact"><span>Contact</span></a>
+      </nav>
     </div>
   </section>
 </div>

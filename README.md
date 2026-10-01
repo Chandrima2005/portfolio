@@ -8,11 +8,12 @@ build.py                ← merges the files in src/ into index.html
 src/
   layout.html           ← page skeleton: <head>, fonts, and the include order
   sections/
-    home.html           ← intro, "Noise is loud", the four boxes, footer screen
-    projects.html
-    experience.html
-    skills.html
-    contact.html
+    home.html           ← the landing page: intro, then includes every section below, "Noise is loud", dots
+    projects.html       ← compact project cards (each opens its full view)
+    project-details.html← one full-screen view per project (#gradient-atlas, #index, ...)
+    experience.html     ← compact experience list
+    skills.html         ← skills deck and tools marquee
+    contact.html        ← contact rows and footer, the last screen of the landing page
   partials/
     loader.html         ← falling-letters loading screen
     header.html         ← top bar with the Menu button

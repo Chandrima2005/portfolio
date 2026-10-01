@@ -1,0 +1,23 @@
+# Claude Code local config
+.claude/
+
+# Vercel CLI
+.vercel/
+
+# Python
+__pycache__/
+*.pyc
+
+# Environment / secrets
+.env
+.env.*
+
+# OS files (Windows / OneDrive / macOS)
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Editors
+.vscode/
+.idea/
+*.swp

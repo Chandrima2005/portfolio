@@ -1,105 +1,65 @@
-<!-- PROJECTS -->
-<div class="view" data-view="projects" data-label="Projects" data-title="Projects · Chandrima Das">
-  <section class="page">
-    <div class="wrap">
-      <header class="page-head">
-        <h1 tabindex="-1"><span>Projects</span></h1>
-        <p>Five things I built and shipped, each running live. Hover a preview to scroll through the real site.</p>
-      </header>
-
-      <article class="proj" style="--glow:#E08A1E; --glowtxt:#E08A1E">
-        <a class="shot" href="https://gradient-atlas.chandrima-das.com/" target="_blank" rel="noopener" data-cursor="Visit">
-          <div class="frame"><div class="fbar"><i></i><i></i><i></i><span>gradient-atlas.chandrima-das.com</span></div><div class="fview"><img src="assets/images/gradient-atlas.jpg" alt="Screenshot of the Gradient Atlas website"></div></div>
-          <span class="visit">Open live site</span>
-        </a>
-        <div class="ptext">
-          <p class="kind">Interactive ML course</p>
-          <h2>Gradient Atlas</h2>
-          <p class="tagline">Learn ML by building it, not memorising it.</p>
-          <p class="desc">24 chapters of classical machine learning as an explorable map, study route, flashcards and a Python-style console. You write each algorithm in plain NumPy, then check it against scikit-learn.</p>
-          <ul class="facts"><li><b>439</b>linked sections</li><li><b>512</b>flashcards</li><li><b>665</b>quiz questions</li></ul>
-          <ul class="tags"><li>Classical ML</li><li>NumPy</li><li>Interactive graph</li><li>Spaced repetition</li></ul>
-          <div class="plinks"><a class="btn primary" href="https://gradient-atlas.chandrima-das.com/" target="_blank" rel="noopener" data-cursor-hover>Live demo</a><a class="btn" href="https://github.com/Chandrima2005/Gradient-atlas" target="_blank" rel="noopener" data-cursor-hover>Source</a></div>
+      <!-- PROJECTS (compact). Each card opens its full view from project-details.html -->
+      <section class="band" id="projects" aria-labelledby="projectsH">
+        <div class="wrap">
+          <header class="sec-head rv">
+            <h2 id="projectsH" tabindex="-1"><span>Projects</span></h2>
+            <p>Five things I built and shipped, each running live. Hover a preview to scroll the real site, click to open the project.</p>
+          </header>
+          <div class="pcs">
+            <a class="pc rv" href="#gradient-atlas" data-cursor="Open" style="--glow:#E08A1E; --glowtxt:#E08A1E">
+              <p class="pc-no"><b>01</b>Interactive ML course</p>
+              <div class="pc-txt">
+                <h3>Gradient Atlas</h3>
+                <p class="pc-line">Learn ML by building it, not memorising it.</p>
+                <p class="pc-tags">Classical ML <i>·</i> NumPy <i>·</i> Interactive graph</p>
+                <span class="pc-go"><span class="pc-arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>View project</span>
+              </div>
+              <div class="pc-shot"><div class="frame"><div class="fbar"><i></i><i></i><i></i><span>gradient-atlas.chandrima-das.com</span></div><div class="fview"><img src="assets/images/gradient-atlas.jpg" alt="Screenshot of the Gradient Atlas website" loading="lazy"></div></div></div>
+            </a>
+            <a class="pc rv" href="#index" data-cursor="Open" style="--glow:#FF8A3D; --glowtxt:#F07A2E">
+              <p class="pc-no"><b>02</b>Physics research with SINP</p>
+              <div class="pc-txt">
+                <h3>InDEx n/γ Discrimination</h3>
+                <p class="pc-line">A neutron's acoustic signature versus a gamma ray's.</p>
+                <p class="pc-tags">Signal processing <i>·</i> STFT <i>·</i> SVM</p>
+                <span class="pc-go"><span class="pc-arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>View project</span>
+              </div>
+              <div class="pc-shot"><div class="frame"><div class="fbar"><i></i><i></i><i></i><span>neutron-gamma-detector.chandrima-das.com</span></div><div class="fview"><img src="assets/images/index-dashboard.jpg" alt="Screenshot of the InDEx neutron/gamma dashboard" loading="lazy"></div></div></div>
+            </a>
+            <a class="pc rv" href="#plugged-in" data-cursor="Open" style="--glow:#2DD4BF; --glowtxt:#14A99A">
+              <p class="pc-no"><b>03</b>Data analytics dashboard</p>
+              <div class="pc-txt">
+                <h3>Plugged In</h3>
+                <p class="pc-line">Washington State's electric vehicles, in one dashboard.</p>
+                <p class="pc-tags">JavaScript <i>·</i> Data visualisation <i>·</i> EDA</p>
+                <span class="pc-go"><span class="pc-arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>View project</span>
+              </div>
+              <div class="pc-shot"><div class="frame"><div class="fbar"><i></i><i></i><i></i><span>chandrima2005.github.io/analytics-dashboard-assessment</span></div><div class="fview"><img src="assets/images/plugged-in.jpg" alt="Screenshot of the Plugged In EV dashboard" loading="lazy"></div></div></div>
+            </a>
+            <a class="pc rv" href="#construction-copilot" data-cursor="Open" style="--glow:#7C6CFF; --glowtxt:#6B5BF0">
+              <p class="pc-no"><b>04</b>LLM agent for CAD drawings</p>
+              <div class="pc-txt">
+                <h3>Construction Copilot</h3>
+                <p class="pc-line">Measured, not guessed.</p>
+                <p class="pc-tags">Python <i>·</i> Tool calling <i>·</i> RAG</p>
+                <span class="pc-go"><span class="pc-arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>View project</span>
+              </div>
+              <div class="pc-shot"><div class="frame"><div class="fbar"><i></i><i></i><i></i><span>cad.chandrima-das.com</span></div><div class="fview"><img src="assets/images/construction-copilot.jpg" alt="Screenshot of Construction Copilot" loading="lazy"></div></div></div>
+            </a>
+            <a class="pc rv" href="#marginalia" data-cursor="Open" style="--glow:#E0B04A; --glowtxt:#C4921F">
+              <p class="pc-no"><b>05</b>Retrieval-augmented Q&amp;A</p>
+              <div class="pc-txt">
+                <h3>Marginalia</h3>
+                <p class="pc-line">Ask the document, not the internet.</p>
+                <p class="pc-tags">RAG <i>·</i> pdf.js <i>·</i> Netlify Functions</p>
+                <span class="pc-go"><span class="pc-arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>View project</span>
+              </div>
+              <div class="pc-shot"><div class="frame"><div class="fbar"><i></i><i></i><i></i><span>rag-doc-qa-by-chandrima.netlify.app</span></div><div class="fview"><img src="assets/images/marginalia.jpg" alt="Screenshot of Marginalia" loading="lazy"></div></div></div>
+            </a>
+          </div>
+          <div class="more rv">
+            <div><h3>There's more on GitHub</h3><p>Computer vision, robotics and AutoML experiments, plus hackathon work.</p></div>
+            <a class="btn" href="https://github.com/Chandrima2005?tab=repositories" target="_blank" rel="noopener" data-cursor-hover>All repositories</a>
+          </div>
         </div>
-      </article>
-
-      <article class="proj" style="--glow:#FF8A3D; --glowtxt:#F07A2E">
-        <a class="shot" href="https://neutron-gamma-detector.chandrima-das.com/" target="_blank" rel="noopener" data-cursor="Visit">
-          <div class="frame"><div class="fbar"><i></i><i></i><i></i><span>neutron-gamma-detector.chandrima-das.com</span></div><div class="fview"><img src="assets/images/index-dashboard.jpg" alt="Screenshot of the InDEx neutron/gamma dashboard"></div></div>
-          <span class="visit">Open dashboard</span>
-        </a>
-        <div class="ptext">
-          <p class="kind">Physics research with SINP</p>
-          <h2>InDEx n/γ Discrimination</h2>
-          <p class="tagline">A neutron's acoustic signature versus a gamma ray's.</p>
-          <p class="desc">My thesis work for a superheated-liquid dark-matter detector: pulse localisation, STFT features, and logistic regression and SVM written from scratch. Drop in a waveform and it classifies it in your browser.</p>
-          <ul class="facts"><li><b>512-D</b>STFT features</li><li><b>200</b>real detector events</li><li><b>100%</b>peak accuracy</li></ul>
-          <ul class="tags"><li>Signal processing</li><li>STFT</li><li>SVM</li><li>In-browser ML</li></ul>
-          <div class="plinks"><a class="btn primary" href="https://neutron-gamma-detector.chandrima-das.com/" target="_blank" rel="noopener" data-cursor-hover>Live demo</a><a class="btn" href="https://github.com/Chandrima2005/neutron-gamma-detector" target="_blank" rel="noopener" data-cursor-hover>Source</a></div>
-        </div>
-      </article>
-
-      <article class="proj" style="--glow:#2DD4BF; --glowtxt:#14A99A">
-        <a class="shot" href="https://chandrima2005.github.io/analytics-dashboard-assessment/" target="_blank" rel="noopener" data-cursor="Visit">
-          <div class="frame"><div class="fbar"><i></i><i></i><i></i><span>chandrima2005.github.io/analytics-dashboard-assessment</span></div><div class="fview"><img src="assets/images/plugged-in.jpg" alt="Screenshot of the Plugged In EV dashboard"></div></div>
-          <span class="visit">Open dashboard</span>
-        </a>
-        <div class="ptext">
-          <p class="kind">Data analytics dashboard</p>
-          <h2>Plugged In</h2>
-          <p class="tagline">Washington State's electric vehicles, in one dashboard.</p>
-          <p class="desc">Every number, chart and written insight is calculated in the browser from the raw CSV, so a newer data export updates the whole site with no code changes.</p>
-          <ul class="facts"><li><b>50,000</b>vehicles analysed</li><li><b>0</b>hard-coded numbers</li><li><b>2</b>live deployments</li></ul>
-          <ul class="tags"><li>JavaScript</li><li>Data visualisation</li><li>EDA</li></ul>
-          <div class="plinks"><a class="btn primary" href="https://chandrima2005.github.io/analytics-dashboard-assessment/" target="_blank" rel="noopener" data-cursor-hover>Live demo</a><a class="btn" href="https://github.com/Chandrima2005/analytics-dashboard-assessment" target="_blank" rel="noopener" data-cursor-hover>Source</a></div>
-        </div>
-      </article>
-
-      <article class="proj" style="--glow:#7C6CFF; --glowtxt:#6B5BF0">
-        <a class="shot" href="https://cad.chandrima-das.com/" target="_blank" rel="noopener" data-cursor="Visit">
-          <div class="frame"><div class="fbar"><i></i><i></i><i></i><span>cad.chandrima-das.com</span></div><div class="fview"><img src="assets/images/construction-copilot.jpg" alt="Screenshot of Construction Copilot"></div></div>
-          <span class="visit">Open app</span>
-        </a>
-        <div class="ptext">
-          <p class="kind">LLM agent for CAD drawings</p>
-          <h2>Construction Copilot</h2>
-          <p class="tagline">Measured, not guessed.</p>
-          <p class="desc">Ask building plans, distribution boards and circuits anything in plain English. Deterministic tools measure every number from the DXF, and hybrid search cites the exact spec clause for pass or fail checks.</p>
-          <ul class="facts"><li><b>20</b>measurement tools</li><li><b>Hybrid</b>BM25 + vector search</li><li><b>Offline</b>desktop mode</li></ul>
-          <ul class="tags"><li>Python</li><li>ezdxf</li><li>Tool calling</li><li>RAG</li><li>Vision model</li></ul>
-          <div class="plinks"><a class="btn primary" href="https://cad.chandrima-das.com/" target="_blank" rel="noopener" data-cursor-hover>Live demo</a><a class="btn" href="https://github.com/Chandrima2005/pdfdxf2summery" target="_blank" rel="noopener" data-cursor-hover>Source</a></div>
-        </div>
-      </article>
-
-      <article class="proj" style="--glow:#E0B04A; --glowtxt:#C4921F">
-        <a class="shot" href="https://rag-doc-qa-by-chandrima.netlify.app/" target="_blank" rel="noopener" data-cursor="Visit">
-          <div class="frame"><div class="fbar"><i></i><i></i><i></i><span>rag-doc-qa-by-chandrima.netlify.app</span></div><div class="fview"><img src="assets/images/marginalia.jpg" alt="Screenshot of Marginalia"></div></div>
-          <span class="visit">Try it</span>
-        </a>
-        <div class="ptext">
-          <p class="kind">Retrieval-augmented Q&amp;A</p>
-          <h2>Marginalia</h2>
-          <p class="tagline">Ask the document, not the internet.</p>
-          <p class="desc">Upload a PDF and get answers grounded only in its most relevant passages. Parsing happens in the browser, and embeddings live in Netlify Blobs, so there's no external vector database.</p>
-          <ul class="facts"><li><b>Top 4</b>passages per answer</li><li><b>0</b>servers to manage</li><li><b>Gemini</b>embeddings</li></ul>
-          <ul class="tags"><li>RAG</li><li>pdf.js</li><li>Netlify Functions</li></ul>
-          <div class="plinks"><a class="btn primary" href="https://rag-doc-qa-by-chandrima.netlify.app/" target="_blank" rel="noopener" data-cursor-hover>Live demo</a><a class="btn" href="https://github.com/Chandrima2005/rag-doc-qa" target="_blank" rel="noopener" data-cursor-hover>Source</a></div>
-        </div>
-      </article>
-
-      <div class="more rv">
-        <div><h3>There's more on GitHub</h3><p>Computer vision, robotics and AutoML experiments, plus hackathon work.</p></div>
-        <a class="btn" href="https://github.com/Chandrima2005?tab=repositories" target="_blank" rel="noopener" data-cursor-hover>All repositories</a>
-      </div>
-      <div class="return">
-        <a class="ret-ring" href="#explore" aria-label="Back to choices" data-cursor="Choices">
-          <svg viewBox="0 0 120 120" aria-hidden="true"><circle class="rbg" cx="60" cy="60" r="54"/><circle class="rpr" cx="60" cy="60" r="54"/></svg>
-          <span class="ret-ic" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-        </a>
-        <p class="ret-t"><span class="ret-a">Keep scrolling to go back to the choices</span><span class="ret-b">Taking you back</span></p>
-        <p class="ret-or">or jump to <a href="#experience">Experience</a><a href="#skills">Skills</a><a href="#contact">Contact</a></p>
-      </div>
-      <div class="foot"><span>© 2026 Chandrima Das</span><span>Progress is a thousand small gaps, closed.</span></div>
-    </div>
-  </section>
-</div>
+      </section>
