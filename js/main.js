@@ -82,10 +82,10 @@ function setPage(i,instant){
   if(current==='home' && location.pathname!==path) history.replaceState(null,'',path+location.search);
 }
 function goPage(d){ var now=performance.now(); if(pi+d<0||pi+d>=pages.length) return; setPage(pi+d); lockUntil=now+950; lastGo=now; }
-function paging(){ return current==='home' && !busy && !body.classList.contains('menu-open'); }
+function paging(){ return current==='home' && !busy && !body.classList.contains('menu-open') && !body.classList.contains('cv-open'); }
 /* a trackpad keeps sending wheel events after a flick, so one gesture moves one page */
 addEventListener('wheel',function(e){
-  if(current!=='home') return;
+  if(current!=='home' || body.classList.contains('cv-open')) return;   /* the résumé viewer scrolls on its own */
   e.preventDefault();
   if(!paging()) return;
   var now=performance.now(), quiet=now-lastWheel; lastWheel=now;
@@ -95,7 +95,7 @@ addEventListener('wheel',function(e){
 },{passive:false});
 var ty=null;
 addEventListener('touchstart',function(e){ ty=e.touches[0].clientY; },{passive:true});
-addEventListener('touchmove',function(e){ if(current==='home') e.preventDefault(); },{passive:false});
+addEventListener('touchmove',function(e){ if(current==='home' && !body.classList.contains('cv-open')) e.preventDefault(); },{passive:false});
 addEventListener('touchend',function(e){
   if(ty===null||!paging()) return; var dy=ty-e.changedTouches[0].clientY; ty=null;
   if(Math.abs(dy)>45 && performance.now()>=lockUntil) goPage(dy>0?1:-1);
@@ -538,6 +538,7 @@ addEventListener('popstate',route);
 document.addEventListener('click',function(e){
   if(e.defaultPrevented || e.button!==0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
   var a=e.target.closest('a[href^="/"]'); if(!a || a.target==='_blank') return;
+  if(a.hasAttribute('download') || /^\/(assets|css|js)\//.test(a.getAttribute('href'))) return;   /* files (like the résumé PDF) open or download normally */
   e.preventDefault(); if(typeof closePeek==='function') closePeek();
   var href=a.getAttribute('href'), id=href.replace(/^\/+|\/+$/g,'')||'home';
   if(current==='home' && PAGE[id]!==undefined){ setMenu(false); setPage(PAGE[id]); return; }
@@ -545,7 +546,7 @@ document.addEventListener('click',function(e){
 });
 /* keyboard on a project: Esc goes back, arrows step through projects */
 document.addEventListener('keydown',function(e){
-  if(current==='home'||busy||body.classList.contains('menu-open')) return;
+  if(current==='home'||busy||body.classList.contains('menu-open')||body.classList.contains('cv-open')) return;
   var v=views[current], to=null;
   if(e.key==='Escape') to='/projects';
   if(e.key==='ArrowLeft') to=v.querySelector('.pd-prev').getAttribute('href');
@@ -791,6 +792,62 @@ if(fine && !reduce){
   rows.forEach(function(r,i){ r.addEventListener('pointerenter',function(){ clearTimeout(timer); show(i,true); }); });
   box.addEventListener('pointerleave',function(){ show(k,false); run(); });
 })();
+
+/* ---------- résumé viewer ----------
+   Any link with data-cv opens the résumé over the page instead of a new tab. The PDF is drawn with pdf.js
+   (loaded only the first time), so it looks the same in every browser; its own links stay clickable. */
+var cvEl=$('#cv'), cvPages=$('#cvPages'), cvUrl='/assets/docs/Chandrima-Das-Resume.pdf', cvWidth=0, cvBusy=false, cvLast=null;
+function loadPdfJs(){
+  if(window.pdfjsLib) return Promise.resolve();
+  return new Promise(function(res,rej){
+    var s=document.createElement('script'); s.src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+    s.onload=function(){ pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'; res(); };
+    s.onerror=rej; document.head.appendChild(s);
+  });
+}
+function renderCv(){
+  var width=Math.min(cvPages.clientWidth||860, 860); if(cvBusy || Math.abs(width-cvWidth)<2) return; cvBusy=true; cvWidth=width;
+  cvPages.innerHTML='<p class="cv-msg"><span class="cv-spin"></span>Loading résumé…</p>';
+  loadPdfJs().then(function(){ return pdfjsLib.getDocument(cvUrl).promise; }).then(function(pdf){
+    cvPages.innerHTML='';
+    var chain=Promise.resolve();
+    for(var n=1;n<=pdf.numPages;n++) (function(n){ chain=chain.then(function(){ return pdf.getPage(n); }).then(function(page){
+      var scale=width/page.getViewport({scale:1}).width, vp=page.getViewport({scale:scale}), q=Math.min(devicePixelRatio||1,2.5)*1.3;
+      var wrap=document.createElement('div'); wrap.className='cv-page'; wrap.style.width=vp.width+'px'; wrap.style.height=vp.height+'px';
+      var c=document.createElement('canvas'); c.width=Math.round(vp.width*q); c.height=Math.round(vp.height*q); wrap.appendChild(c); cvPages.appendChild(wrap);
+      return page.render({canvasContext:c.getContext('2d'), viewport:page.getViewport({scale:scale*q})}).promise
+        .then(function(){ return page.getAnnotations(); })
+        .then(function(anns){ anns.forEach(function(a){ if(!a.url) return;
+          var r=vp.convertToViewportRectangle(a.rect), l=document.createElement('a');
+          l.href=a.url; l.target='_blank'; l.rel='noopener'; l.className='cv-link'; l.title=a.url.replace(/^mailto:/,'');
+          l.style.left=Math.min(r[0],r[2])+'px'; l.style.top=Math.min(r[1],r[3])+'px'; l.style.width=Math.abs(r[2]-r[0])+'px'; l.style.height=Math.abs(r[3]-r[1])+'px';
+          wrap.appendChild(l); }); });
+    }); })(n);
+    return chain;
+  }).catch(function(){
+    cvWidth=0;
+    cvPages.innerHTML='<p class="cv-msg">The résumé couldn’t be shown here. <a href="'+cvUrl+'" download="Chandrima-Das-Resume.pdf">Download the PDF</a> instead.</p>';
+  }).then(function(){ cvBusy=false; });
+}
+function openCv(){
+  setMenu(false); if(typeof closePeek==='function') closePeek();
+  cvLast=document.activeElement;
+  body.classList.add('cv-open'); cvEl.setAttribute('aria-hidden','false'); $('#cvScroll').scrollTop=0;
+  renderCv(); setTimeout(function(){ $('#cvClose').focus({preventScroll:true}); },60);
+}
+function closeCv(){
+  if(!body.classList.contains('cv-open')) return;
+  body.classList.remove('cv-open'); cvEl.setAttribute('aria-hidden','true');
+  if(cvLast && cvLast.focus) cvLast.focus({preventScroll:true});
+}
+document.addEventListener('click',function(e){
+  var a=e.target.closest('[data-cv]'); if(!a || e.metaKey || e.ctrlKey || e.shiftKey) return;   /* modifier-clicks still open the PDF itself */
+  e.preventDefault(); e.stopPropagation(); openCv();
+},true);
+$('#cvClose').addEventListener('click',closeCv);
+cvEl.addEventListener('click',function(e){ if(e.target===cvEl) closeCv(); });
+document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeCv(); });
+addEventListener('resize',function(){ if(body.classList.contains('cv-open')) renderCv(); else cvWidth=0; });
 
 /* ---------- loader ----------
    Five styles. A: boot log + progress bar + name typed behind a cursor.

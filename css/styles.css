@@ -788,3 +788,40 @@ body:not([data-view="home"]) .dots{display:none}
 .pk-swap{position:absolute; left:0; right:0; bottom:.55rem; margin:0; text-align:center; font-family:var(--mono); font-size:.66rem; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); opacity:.75; pointer-events:none; z-index:3}
 /* hover swap: the halves aren't buttons any more, so no pointer hand outside the links */
 .pk-shot, .pk-body{cursor:default}
+
+/* résumé link in the top bar: a small outlined pill so it stands apart from the section links */
+.bar-nav a.bar-cv{margin-left:.35rem; border:1px solid color-mix(in srgb,var(--violet) 45%,var(--line)); color:var(--ink)}
+.bar-nav a.bar-cv:hover{background:var(--violet); border-color:var(--violet); color:#fff}
+/* the contact page's download button is a link styled like the Copy button */
+a.ct-copy{text-decoration:none; color:var(--ink)}
+
+/* ===== RÉSUMÉ VIEWER: a panel over the page with the PDF drawn inside and a download button ===== */
+.cv{position:fixed; inset:0; z-index:80; display:grid; place-items:center; padding:clamp(.75rem,3vw,2rem); background:color-mix(in srgb,var(--bg) 72%,transparent); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); opacity:0; visibility:hidden; transition:opacity .35s ease, visibility .35s}
+body.cv-open .cv{opacity:1; visibility:visible}
+.cv-panel{display:flex; flex-direction:column; width:min(960px,100%); height:100%; max-height:calc(var(--ph,100vh) - 1.5rem); background:var(--solid); border:1px solid var(--line); border-radius:20px; overflow:hidden; box-shadow:0 40px 100px -40px rgba(0,0,0,.55); transform:translateY(18px) scale(.985); transition:transform .5s cubic-bezier(.22,1,.36,1)}
+body.cv-open .cv-panel{transform:none}
+.cv-bar{display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:.7rem .8rem .7rem 1.3rem; border-bottom:1px solid var(--line)}
+.cv-title{margin:0; font-family:var(--display); font-weight:700; font-size:1.1rem; letter-spacing:-.01em}
+.cv-title span{font-family:var(--body); font-weight:400; font-size:.92rem; color:var(--muted)}
+.cv-actions{display:flex; align-items:center; gap:.5rem}
+.cv-dl{padding:.55rem 1rem; font-size:.88rem}
+.cv-dl svg{width:16px; height:16px}
+.cv-x{display:grid; place-items:center; width:40px; height:40px; border-radius:50%; border:1px solid var(--line); background:none; cursor:pointer; transition:border-color .2s, background .2s}
+.cv-x:hover{border-color:var(--violet); background:color-mix(in srgb,var(--violet) 10%,transparent)}
+.cv-x svg{width:18px; height:18px}
+.cv-scroll{flex:1; min-height:0; overflow:auto; overscroll-behavior:contain; padding:clamp(.75rem,2.5vw,1.75rem); background:color-mix(in srgb,var(--ink) 6%,var(--bg))}
+.cv-pages{display:flex; flex-direction:column; align-items:center; gap:1.2rem; min-height:100%}
+.cv-page{position:relative; flex:none; max-width:100%; background:#fff; border-radius:4px; overflow:hidden; box-shadow:0 14px 34px -14px rgba(0,0,0,.4)}
+.cv-page canvas{display:block; width:100%; height:100%}
+.cv-link{position:absolute; border-radius:3px; transition:background .2s}
+.cv-link:hover{background:rgba(107,53,201,.14)}
+.cv-msg{margin:auto; padding:2rem 1rem; text-align:center; color:var(--muted)}
+.cv-msg a{color:var(--violet); font-weight:600}
+.cv-spin{display:block; width:28px; height:28px; margin:0 auto .8rem; border-radius:50%; border:2.5px solid var(--line); border-top-color:var(--violet); animation:cvSpin .8s linear infinite}
+@keyframes cvSpin{to{transform:rotate(360deg)}}
+@media (max-width:640px){
+  .cv{padding:0}
+  .cv-panel{max-height:none; border-radius:0; border:0}
+  .cv-title span{display:none}
+  .cv-dl{padding:.5rem .8rem}
+}
