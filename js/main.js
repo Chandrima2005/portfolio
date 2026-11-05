@@ -115,7 +115,7 @@ $('#toTop').addEventListener('click',function(){ setPage(0); });
    through it, like a living topographic map of a signal. Each page turn shifts the flow and the
    colour balance; the mouse gently bends the currents. Same interface: theme(), size(), render(t,f). */
 var gl=null;
-function initGL(){
+function bgContour(){
   if(!window.THREE) return null;
   var canvas=$('#gl'), renderer;
   try{ renderer=new THREE.WebGLRenderer({canvas:canvas, antialias:false, alpha:true, powerPreference:'high-performance'}); }catch(e){ return null; }
@@ -179,6 +179,299 @@ function initGL(){
       renderer.render(scene,cam);
     }
   };
+}
+
+/* ---------- more background styles ----------
+   BG picks the one the site uses; preview any with ?bg=contour, aurora, orbs, net, grid, stars, blob or bars.
+   Every style offers the same three calls: theme(), size(), render(t, f) where f is the page position. */
+var BG='ring';
+
+/* shared: a full-screen shader on the #gl canvas, fed the theme colours, time, page and mouse */
+function shaderBG(fragBody, scale){
+  if(!window.THREE) return null;
+  var canvas=$('#gl'), renderer;
+  try{ renderer=new THREE.WebGLRenderer({canvas:canvas, antialias:false, alpha:true, powerPreference:'high-performance'}); }catch(e){ return null; }
+  var mobile=innerWidth<760, scene=new THREE.Scene(), cam=new THREE.OrthographicCamera(-1,1,1,-1,0,1);
+  var uni={uT:{value:0}, uRes:{value:new THREE.Vector2(1,1)}, uMouse:{value:new THREE.Vector2(0,0)}, uPage:{value:0},
+           uA:{value:new THREE.Color()}, uB:{value:new THREE.Color()}, uC:{value:new THREE.Color()}, uDark:{value:0}};
+  var mat=new THREE.ShaderMaterial({uniforms:uni, transparent:true, depthWrite:false, depthTest:false, extensions:{derivatives:true},
+    vertexShader:'void main(){ gl_Position=vec4(position.xy,0.,1.); }',
+    fragmentShader:['precision highp float;',
+      'uniform float uT,uPage,uDark; uniform vec2 uRes,uMouse; uniform vec3 uA,uB,uC;',
+      'float h(vec2 p){ return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453); }',
+      'float n(vec2 p){ vec2 i=floor(p), f=fract(p); f=f*f*(3.-2.*f); return mix(mix(h(i),h(i+vec2(1,0)),f.x), mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x), f.y); }',
+      'void main(){ vec2 uv=gl_FragCoord.xy/uRes; float asp=uRes.x/uRes.y; vec4 o=vec4(0.);',
+      fragBody,
+      '  o.rgb+=(h(gl_FragCoord.xy+fract(uT))-.5)*.03; gl_FragColor=vec4(o.rgb,clamp(o.a,0.,1.)); }'].join('\n')});
+  scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2,2),mat));
+  function theme(){ uni.uA.value.set(css('--pA')); uni.uB.value.set(css('--pB')); uni.uC.value.set(css('--pC')); uni.uDark.value=css('--blend')==='additive'?1:0; }
+  function size(){ var pr=Math.min(devicePixelRatio,1.5)*(mobile?.6:(scale||1)); renderer.setPixelRatio(pr); renderer.setSize(innerWidth,innerHeight,false); uni.uRes.value.set(innerWidth*pr,innerHeight*pr); }
+  theme(); size();
+  var mx=0,my=0,cmx=0,cmy=0;
+  addEventListener('pointermove',function(e){ mx=e.clientX/innerWidth*2-1; my=-(e.clientY/innerHeight*2-1); },{passive:true});
+  return {theme:theme, size:size, render:function(t,f){ cmx+=(mx-cmx)*.035; cmy+=(my-cmy)*.035; uni.uT.value=t; uni.uPage.value=f; uni.uMouse.value.set(cmx,cmy); renderer.render(scene,cam); }};
+}
+
+/* AURORA: silky ribbons of light drifting across the screen; each page shifts their height and hue */
+function bgAurora(){
+  return shaderBG([
+    '  vec2 p=vec2(uv.x*asp,uv.y); float t=uT*.18; vec3 col=vec3(0.); float a=0.;',
+    '  for(int i=0;i<5;i++){ float fi=float(i);',
+    '    float y0=.2+fi*.13+.035*sin(uPage*1.3+fi) + .09*sin(p.x*1.6+t*2.2+fi*1.9+uPage*.6) + .045*sin(p.x*4.1-t*3.1+fi*2.7) + uMouse.y*.03*(fi-2.);',
+    '    float d=p.y-y0;',
+    /* a ribbon: a bright thin core, a soft glow, and a curtain hanging below it that shimmers */
+    '    float core=exp(-d*d*2600.), glow=exp(-d*d*120.)*.35, curtain=d<0.? exp(d*9.)*.22*(.55+.45*sin(p.x*38.+t*9.+fi*4.)) : 0.;',
+    '    float v=(core+glow+curtain)*(.55+.45*n(vec2(p.x*2.+t+fi*3.,fi)));',
+    '    vec3 c=mix(uA,uB,clamp(fract(fi*.37+p.x*.22+uPage*.08)*1.2,0.,1.)); c=mix(c,uC,.18*step(3.5,fi));',
+    '    col+=c*v; a+=v; }',
+    '  float k=uDark>.5? .62 : .48; o=vec4(col/max(a,.001), a*k*.75);'].join('\n'), .8);
+}
+
+/* GLOW ORBS + GRID: big soft orbs of colour floating and merging over a faint perspective grid floor */
+function bgOrbs(){
+  return shaderBG([
+    '  vec2 p=vec2((uv.x-.5)*asp,uv.y-.5); float t=uT*.12+uPage*.9; float field=0.; vec3 col=vec3(0.);',
+    '  for(int i=0;i<5;i++){ float fi=float(i);',
+    '    vec2 c=vec2(sin(t*(.7+fi*.13)+fi*2.1)*.55*asp*.6, cos(t*(.5+fi*.11)+fi*1.3)*.32) + uMouse*vec2(.05,.04)*(fi-2.);',
+    '    float r=.16+.05*sin(t+fi); float v=r*r/max(dot(p-c,p-c),.0004);',
+    '    vec3 k=fi<1.5? uA : (fi<3.5? uB : uC); col+=k*v; field+=v; }',
+    '  col/=max(field,.001); float glow=smoothstep(.15,1.6,field);',
+    /* the floor: lines receding to a horizon, scrolling toward the viewer */
+    '  float hz=.42, gy=hz-uv.y, grid=0.;',
+    '  if(gy>0.){ float z=.22/gy; vec2 g=vec2((uv.x-.5)*asp*z, z+uT*.35+uPage*1.5)*3.2;',
+    '    vec2 w=fwidth(g)*1.3; vec2 l=1.-clamp(abs(fract(g)-.5)/max(w,vec2(.0001)),0.,1.);',
+    '    grid=max(l.x,l.y)*smoothstep(0.,.25,gy)*smoothstep(28.,3.,z*3.2); }',
+    '  float k=uDark>.5? .55 : .38;',
+    '  o=vec4(mix(col,uB,grid*.6), glow*k + grid*(uDark>.5? .35 : .22));'].join('\n'), .9);
+}
+
+/* CONSTELLATION: glowing nodes linked like a neural network; pulses run along the links,
+   nodes move aside from the mouse, and each page turn swings the whole drift */
+function bgNet(){
+  var cv=$('#gl'), x=cv.getContext('2d'); if(!x) return null;
+  var W=0,H=0,d=1, nodes=[], pulses=[], C={}, mxp=-999, myp=-999, lastPulse=0;
+  function rgb(hex){ var hh=(hex||'#888').replace('#',''); if(hh.length===3) hh=hh.split('').map(function(c){return c+c}).join(''); var nn=parseInt(hh,16); return [nn>>16&255,nn>>8&255,nn&255]; }
+  function theme(){ C={a:rgb(css('--pA')), b:rgb(css('--pB')), c:rgb(css('--pC')), dark:css('--blend')==='additive'}; }
+  function size(){
+    d=Math.min(devicePixelRatio,2); W=innerWidth; H=innerHeight; cv.width=Math.round(W*d); cv.height=Math.round(H*d); x.setTransform(d,0,0,d,0,0);
+    var count=Math.round(Math.min(170,Math.max(55,W*H/8500))); nodes=[];
+    for(var i=0;i<count;i++) nodes.push({x:Math.random()*W, y:Math.random()*H, vx:(Math.random()-.5)*.25, vy:(Math.random()-.5)*.25, r:1.2+Math.random()*1.8, k:Math.random(), ph:Math.random()*6.283});
+    pulses=[];
+  }
+  addEventListener('pointermove',function(e){ mxp=e.clientX; myp=e.clientY; },{passive:true});
+  theme(); size();
+  function col(c,a){ return 'rgba('+c[0]+','+c[1]+','+c[2]+','+a.toFixed(3)+')'; }
+  return {theme:theme, size:size, render:function(t,f){
+    x.clearRect(0,0,W,H);
+    var LINK=Math.min(200,W*.16), ang=f*.9, dx=Math.cos(ang)*.18, dy=Math.sin(ang)*.12, base=C.dark?1:.75;
+    nodes.forEach(function(nd){
+      nd.x+=nd.vx+dx; nd.y+=nd.vy+dy;
+      var ex=nd.x-mxp, ey=nd.y-myp, e2=ex*ex+ey*ey; if(e2<14000){ var push=(1-e2/14000)*1.6; var ln=Math.sqrt(e2)||1; nd.x+=ex/ln*push; nd.y+=ey/ln*push; }
+      if(nd.x<-40) nd.x=W+40; if(nd.x>W+40) nd.x=-40; if(nd.y<-40) nd.y=H+40; if(nd.y>H+40) nd.y=-40;
+    });
+    /* links */
+    var links=[];
+    for(var i=0;i<nodes.length;i++) for(var j=i+1;j<nodes.length;j++){
+      var a=nodes[i], b=nodes[j], ddx=a.x-b.x, ddy=a.y-b.y, dd=ddx*ddx+ddy*ddy;
+      if(dd<LINK*LINK){ var s=1-Math.sqrt(dd)/LINK; links.push([a,b,s]);
+        x.strokeStyle=col(a.k<.5?C.a:C.b, s*.32*base); x.lineWidth=s*1.1; x.beginPath(); x.moveTo(a.x,a.y); x.lineTo(b.x,b.y); x.stroke(); }
+    }
+    /* pulses travel along random links */
+    if(t-lastPulse>.12 && links.length){ lastPulse=t; var L=links[Math.floor(Math.random()*links.length)]; pulses.push({a:L[0], b:L[1], k:0, c:Math.random()<.2?C.c:C.b}); }
+    pulses=pulses.filter(function(p){ p.k+=.022; if(p.k>=1) return false;
+      var px=p.a.x+(p.b.x-p.a.x)*p.k, py=p.a.y+(p.b.y-p.a.y)*p.k, al=Math.sin(p.k*Math.PI)*base;
+      var g=x.createRadialGradient(px,py,0,px,py,7); g.addColorStop(0,col(p.c,.9*al)); g.addColorStop(1,col(p.c,0));
+      x.fillStyle=g; x.beginPath(); x.arc(px,py,7,0,6.283); x.fill(); return true; });
+    /* nodes */
+    nodes.forEach(function(nd){ var tw=.55+.45*Math.sin(t*1.4+nd.ph);
+      x.fillStyle=col(nd.k<.5?C.a:C.b,(.45+.45*tw)*base); x.beginPath(); x.arc(nd.x,nd.y,nd.r,0,6.283); x.fill(); });
+  }};
+}
+
+/* shared for the 2D styles: theme colours as rgb arrays */
+function rgbOf(hex){ var hh=(hex||'#888').replace('#',''); if(hh.length===3) hh=hh.split('').map(function(c){return c+c}).join(''); var nn=parseInt(hh,16); return [nn>>16&255,nn>>8&255,nn&255]; }
+function rgba(c,a){ return 'rgba('+c[0]+','+c[1]+','+c[2]+','+Math.max(0,Math.min(1,a)).toFixed(3)+')'; }
+function mixC(a,b,k){ return [a[0]+(b[0]-a[0])*k, a[1]+(b[1]-a[1])*k, a[2]+(b[2]-a[2])*k].map(Math.round); }
+
+/* PIXEL GRID: a wall of small squares that light up in slow waves, like an LED panel or a heatmap;
+   a soft spotlight follows the mouse, and each page turns the waves to a new direction */
+function bgGrid(){
+  var cv=$('#gl'), x=cv.getContext('2d'); if(!x) return null;
+  var W,H,C={}, mx=-999,my=-999, smx=-999, smy=-999, CELL=26;
+  function theme(){ C={a:rgbOf(css('--pA')), b:rgbOf(css('--pB')), c:rgbOf(css('--pC')), dark:css('--blend')==='additive'}; }
+  function size(){ var d=Math.min(devicePixelRatio,2); W=innerWidth; H=innerHeight; cv.width=Math.round(W*d); cv.height=Math.round(H*d); x.setTransform(d,0,0,d,0,0); CELL=W<760?22:26; }
+  addEventListener('pointermove',function(e){ mx=e.clientX; my=e.clientY; },{passive:true});
+  theme(); size();
+  return {theme:theme, size:size, render:function(t,f){
+    x.clearRect(0,0,W,H);
+    if(smx<-500){ smx=mx; smy=my; } smx+=(mx-smx)*.08; smy+=(my-smy)*.08;
+    var ang=.6+f*.75, ux=Math.cos(ang), uy=Math.sin(ang), base=C.dark?1:.7, s=CELL-6;
+    for(var gy=0; gy<H+CELL; gy+=CELL) for(var gx=0; gx<W+CELL; gx+=CELL){
+      var w=Math.sin((gx*ux+gy*uy)*.012 - t*.9) * Math.sin((gx*uy-gy*ux)*.007 + t*.5);
+      var v=Math.max(0,w)*.55;
+      var dx=gx-smx, dy=gy-smy, sp=Math.exp(-(dx*dx+dy*dy)/26000)*.75;
+      v=v+sp; if(v<.04) continue;
+      var k=(gx/W)*.85+sp*.3, col=mixC(C.a,C.b,Math.min(1,k)); if(sp>.45) col=mixC(col,C.c,(sp-.45)*.8);
+      var sz=s*(.45+.55*Math.min(1,v));
+      x.fillStyle=rgba(col,v*.42*base); x.fillRect(gx-sz/2,gy-sz/2,sz,sz);
+    }
+  }};
+}
+
+/* STARFIELD: stars stream gently toward you like a slow warp; every page change gives a short rush forward */
+function bgStars(){
+  var cv=$('#gl'), x=cv.getContext('2d'); if(!x) return null;
+  var W,H,C={}, stars=[], lastF=0, speed=0, mx=0,my=0, cmx=0,cmy=0;
+  function theme(){ C={a:rgbOf(css('--pA')), b:rgbOf(css('--pB')), ink:rgbOf(css('--ink')), dark:css('--blend')==='additive'}; }
+  function reset(s){ s.x=(Math.random()-.5)*2; s.y=(Math.random()-.5)*2; s.z=Math.random()*.9+.1; s.pz=s.z; s.k=Math.random(); }
+  function size(){ var d=Math.min(devicePixelRatio,2); W=innerWidth; H=innerHeight; cv.width=Math.round(W*d); cv.height=Math.round(H*d); x.setTransform(d,0,0,d,0,0);
+    var n=W<760?450:1000; stars=[]; for(var i=0;i<n;i++){ var s={}; reset(s); stars.push(s); } }
+  addEventListener('pointermove',function(e){ mx=e.clientX/innerWidth-.5; my=e.clientY/innerHeight-.5; },{passive:true});
+  theme(); size();
+  return {theme:theme, size:size, render:function(t,f){
+    x.clearRect(0,0,W,H);
+    var df=Math.abs(f-lastF); lastF=f; speed+=(.0042+df*.6-speed)*.08;
+    cmx+=(mx-cmx)*.05; cmy+=(my-cmy)*.05;
+    var cx=W/2-cmx*W*.12, cy=H/2-cmy*H*.12, scale=Math.max(W,H)*.5, base=C.dark?1:.75;
+    for(var i=0;i<stars.length;i++){ var s=stars[i]; s.pz=s.z; s.z-=speed; if(s.z<=.02){ reset(s); s.z=1; s.pz=1; continue; }
+      var sx=cx+s.x/s.z*scale, sy=cy+s.y/s.z*scale, px=cx+s.x/s.pz*scale, py=cy+s.y/s.pz*scale;
+      if(sx<-50||sx>W+50||sy<-50||sy>H+50){ reset(s); s.z=1; s.pz=1; continue; }
+      var near=1-s.z, col=s.k<.45?C.a:(s.k<.85?C.b:C.ink);
+      x.strokeStyle=rgba(col,(.3+near*.7)*base); x.lineWidth=.8+near*2.6; x.lineCap='round';
+      x.beginPath(); x.moveTo(px,py); x.lineTo(sx+.01,sy+.01); x.stroke();
+    }
+  }};
+}
+
+/* LIQUID BLOB: one large glossy shape that slowly morphs and turns, lit with the theme colours;
+   it glides to a new spot on each page and leans toward the mouse */
+function bgBlob(){
+  if(!window.THREE) return null;
+  var canvas=$('#gl'), renderer;
+  try{ renderer=new THREE.WebGLRenderer({canvas:canvas, antialias:true, alpha:true, powerPreference:'high-performance'}); }catch(e){ return null; }
+  var mobile=innerWidth<760, scene=new THREE.Scene(), cam=new THREE.PerspectiveCamera(40,innerWidth/innerHeight,.1,100); cam.position.set(0,0,9);
+  var uni={uT:{value:0}, uA:{value:new THREE.Color()}, uB:{value:new THREE.Color()}, uC:{value:new THREE.Color()}, uDark:{value:0}, uAlpha:{value:1}};
+  var mat=new THREE.ShaderMaterial({uniforms:uni, transparent:true,
+    vertexShader:[
+      'uniform float uT; varying vec3 vN; varying vec3 vV; varying float vD;',
+      'float w(vec3 p){ return sin(p.x*1.7+uT*.7)*sin(p.y*1.9+uT*.55)*sin(p.z*1.5+uT*.8)*.42 + sin(p.x*3.3-uT*.9+p.z*2.)*.12; }',
+      'void main(){ vec3 p=position; float d=w(normal*1.8+p*.4); p+=normal*d; vD=d;',
+      '  vec4 mv=modelViewMatrix*vec4(p,1.); vV=normalize(-mv.xyz); vN=normalize(normalMatrix*normal); gl_Position=projectionMatrix*mv; }'].join('\n'),
+    fragmentShader:[
+      'uniform vec3 uA,uB,uC; uniform float uDark,uAlpha; varying vec3 vN; varying vec3 vV; varying float vD;',
+      'void main(){ vec3 n=normalize(vN); float fres=pow(1.-max(dot(n,vV),0.),2.2);',
+      '  vec3 l=normalize(vec3(.6,.8,.7)); float diff=max(dot(n,l),0.); float spec=pow(max(dot(reflect(-l,n),vV),0.),28.);',
+      '  vec3 col=mix(uA,uB,clamp(n.y*.5+.5+vD,0.,1.)); col=mix(col,uC,clamp(n.x*.5+.2,0.,1.)*.35);',
+      '  col=col*(.45+.55*diff)+fres*mix(uB,vec3(1.),.4)*.9+spec*.7;',
+      '  gl_FragColor=vec4(col,(uDark>.5? .9 : .75)*uAlpha); }'].join('\n')});
+  var blob=new THREE.Mesh(new THREE.IcosahedronGeometry(1.75,mobile?24:48),mat); scene.add(blob);
+  function theme(){ uni.uA.value.set(css('--pA')); uni.uB.value.set(css('--pB')); uni.uC.value.set(css('--pC')); uni.uDark.value=css('--blend')==='additive'?1:0; }
+  function size(){ renderer.setPixelRatio(Math.min(devicePixelRatio,mobile?1.5:2)); renderer.setSize(innerWidth,innerHeight,false); cam.aspect=innerWidth/innerHeight; cam.updateProjectionMatrix(); }
+  theme(); size();
+  var mx=0,my=0,cmx=0,cmy=0;
+  addEventListener('pointermove',function(e){ mx=e.clientX/innerWidth*2-1; my=-(e.clientY/innerHeight*2-1); },{passive:true});
+  /* where the blob rests on each page: right of the intro, then drifting around the edges */
+  var spots=[[4.6,-.6,-3.2],[4.4,-1.6,-3.5],[-4.4,1.3,-3.2],[4.3,1.5,-3],[-4.2,-1.6,-3.5],[0,-3.2,-4],[4.2,-.4,-3]];
+  return {theme:theme, size:size, render:function(t,f){
+    cmx+=(mx-cmx)*.04; cmy+=(my-cmy)*.04; uni.uT.value=t;
+    var i=Math.floor(f), k=f-i, a=spots[Math.min(i,spots.length-1)], b=spots[Math.min(i+1,spots.length-1)], e=k*k*(3-2*k);
+    var narrow=innerWidth<900? .45:1;
+    blob.position.set((a[0]+(b[0]-a[0])*e)*narrow, a[1]+(b[1]-a[1])*e, a[2]+(b[2]-a[2])*e);
+    blob.rotation.set(t*.07+cmy*.5, t*.11+cmx*.6, 0);
+    renderer.render(scene,cam);
+  }};
+}
+
+/* SPECTRUM: a live audio-style spectrum of soft bars along the bottom with a mirrored glow,
+   and a faint oscilloscope trace above; each page plays a different frequency profile */
+function bgBars(){
+  var cv=$('#gl'), x=cv.getContext('2d'); if(!x) return null;
+  var W,H,C={}, mx=.5, smx=.5, lv=[];
+  function theme(){ C={a:rgbOf(css('--pA')), b:rgbOf(css('--pB')), c:rgbOf(css('--pC')), dark:css('--blend')==='additive'}; }
+  function size(){ var d=Math.min(devicePixelRatio,2); W=innerWidth; H=innerHeight; cv.width=Math.round(W*d); cv.height=Math.round(H*d); x.setTransform(d,0,0,d,0,0); lv=[]; }
+  addEventListener('pointermove',function(e){ mx=e.clientX/innerWidth; },{passive:true});
+  theme(); size();
+  /* scroll response: while a page slides, an energy burst sweeps across the bars in the scroll
+     direction and the whole pattern travels sideways; it settles once the page lands */
+  var lastF=null, energy=0, front=-.2, dir=1;
+  return {theme:theme, size:size, render:function(t,f){
+    x.clearRect(0,0,W,H);
+    smx+=(mx-smx)*.05;
+    if(lastF===null) lastF=f;
+    var vel=f-lastF; lastF=f;
+    if(Math.abs(vel)>.0008) dir=vel>0?1:-1;
+    energy+=(Math.min(1,Math.abs(vel)*40)-energy)*.12;
+    if(energy>.04) front+=dir*.028; else front=dir>0?-.2:1.2;
+    var N=W<760?36:72, gap=3, bw=(W-gap*(N-1))/N, floor=H*.9, maxH=H*.22*(1+energy*.6), base=C.dark?.75:.55;
+    for(var i=0;i<N;i++){
+      var u=i/(N-1), us=u+f*.37;   /* us: the pattern shifted along as you move through the pages */
+      var target=.18+.5*Math.pow(Math.max(0,Math.sin(us*Math.PI*1.6+t*.8+f)),2)
+                 +.25*Math.max(0,Math.sin(us*17.+t*2.3+i*.7))*Math.max(0,Math.sin(t*1.7+us*5.+f*2.))
+                 +.35*Math.exp(-Math.pow((u-smx)*6,2))
+                 +energy*(.35+.3*Math.sin(u*14.+t*11.))*(.35+.65*Math.exp(-Math.pow((u-front)*5,2)));
+      lv[i]=lv[i]==null?target:lv[i]+(target-lv[i])*(.12+energy*.2);
+      var hh=lv[i]*maxH, bx=i*(bw+gap), col=mixC(C.a,C.b,u); if(lv[i]>.75) col=mixC(col,C.c,(lv[i]-.75)*1.5);
+      var g=x.createLinearGradient(0,floor-hh,0,floor); g.addColorStop(0,rgba(col,.55*base)); g.addColorStop(1,rgba(col,.12*base));
+      x.fillStyle=g; x.fillRect(bx,floor-hh,bw,hh);
+      x.fillStyle=rgba(col,.9*base); x.fillRect(bx,floor-hh-3,bw,2);
+      var r=x.createLinearGradient(0,floor,0,floor+hh*.45); r.addColorStop(0,rgba(col,.14*base)); r.addColorStop(1,rgba(col,0));
+      x.fillStyle=r; x.fillRect(bx,floor+3,bw,hh*.45);
+    }
+    /* the oscilloscope line */
+    x.beginPath();
+    for(var px=0; px<=W; px+=6){ var uu=px/W, env=Math.exp(-Math.pow((uu-.5)/.32,2));
+      var y=H*.42+Math.sin(uu*Math.PI*2*(4+f)+t*1.6)*H*.05*env*(1+energy*2.2)+Math.sin(uu*40.+t*3.)*3*env*(1+energy*3); px?x.lineTo(px,y):x.moveTo(px,y); }
+    var lg=x.createLinearGradient(0,0,W,0); lg.addColorStop(0,rgba(C.a,0)); lg.addColorStop(.5,rgba(C.b,.35*base)); lg.addColorStop(1,rgba(C.a,0));
+    x.strokeStyle=lg; x.lineWidth=1.4; x.stroke();
+  }};
+}
+
+/* SPECTRUM CAROUSEL (360): the spectrum bars stand in a ring seen in perspective, like a round stage.
+   Front bars are larger and brighter, back bars smaller and dimmer. Scrolling turns the ring a step per
+   page (a full 360 across the site), and a page slide still sends a burst through the bars. */
+function bgRing(){
+  var cv=$('#gl'), x=cv.getContext('2d'); if(!x) return null;
+  var W,H,C={}, mx=.5, smx=.5, lv=[], lastF=null, energy=0, spin=0;
+  function theme(){ C={a:rgbOf(css('--pA')), b:rgbOf(css('--pB')), c:rgbOf(css('--pC')), dark:css('--blend')==='additive'}; }
+  function size(){ var d=Math.min(devicePixelRatio,2); W=innerWidth; H=innerHeight; cv.width=Math.round(W*d); cv.height=Math.round(H*d); x.setTransform(d,0,0,d,0,0); lv=[]; }
+  addEventListener('pointermove',function(e){ mx=e.clientX/innerWidth; },{passive:true});
+  theme(); size();
+  return {theme:theme, size:size, render:function(t,f){
+    x.clearRect(0,0,W,H);
+    smx+=(mx-smx)*.05;
+    if(lastF===null) lastF=f;
+    var vel=f-lastF; lastF=f;
+    energy+=(Math.min(1,Math.abs(vel)*40)-energy)*.12;
+    spin+=vel*Math.PI*2/5 + .0009;            /* five page steps make one full turn, plus a slow idle drift */
+    var N=W<760?64:110, cx=W*.5, cy=H*.78, Rx=Math.min(W*.46,H*.95), Ry=Rx*.18, maxH=Math.min(H*.25,W*.18)*(1+energy*.5);
+    var bw=Math.max(3,(Math.PI*2*Rx/N)*.55), base=C.dark?.8:.6, bars=[];
+    for(var i=0;i<N;i++){
+      var a=i/N*Math.PI*2, ang=a+spin, s=Math.sin(ang), depth=(s+1)/2;
+      var target=.16+.45*Math.pow(Math.max(0,Math.sin(a*3+t*.8+f)),2)
+                 +.25*Math.max(0,Math.sin(a*11+t*2.3+i*.7))*Math.max(0,Math.sin(t*1.7+a*2+f*2))
+                 +energy*(.35+.3*Math.sin(a*9+t*11));
+      var px=cx+Math.cos(ang)*Rx;
+      target+=.3*Math.exp(-Math.pow((px/W-smx)*6,2))*depth;   /* bars at the front, under the mouse, rise */
+      lv[i]=lv[i]==null?target:lv[i]+(target-lv[i])*(.12+energy*.2);
+      bars.push({px:px, py:cy+s*Ry, d:depth, v:lv[i], u:i/N});
+    }
+    /* the floor ellipse, then the bars back to front */
+    x.beginPath(); x.ellipse(cx,cy,Rx,Ry,0,0,Math.PI*2); x.strokeStyle=rgba(C.b,.18*base); x.lineWidth=1; x.stroke();
+    bars.sort(function(p,q){ return p.d-q.d; });
+    bars.forEach(function(b){
+      var sc=.45+.55*b.d, hh=b.v*maxH*sc, w=bw*sc, al=(.22+.78*b.d)*base;
+      var col=mixC(C.a,C.b,.5+.5*Math.sin(b.u*Math.PI*2)); if(b.v>.75) col=mixC(col,C.c,(b.v-.75)*1.5);
+      var g=x.createLinearGradient(0,b.py-hh,0,b.py); g.addColorStop(0,rgba(col,.6*al)); g.addColorStop(1,rgba(col,.1*al));
+      x.fillStyle=g; x.fillRect(b.px-w/2,b.py-hh,w,hh);
+      x.fillStyle=rgba(col,.95*al); x.fillRect(b.px-w/2,b.py-hh-2,w,2);
+      if(b.d>.5){ var r=x.createLinearGradient(0,b.py,0,b.py+hh*.35); r.addColorStop(0,rgba(col,.12*al)); r.addColorStop(1,rgba(col,0)); x.fillStyle=r; x.fillRect(b.px-w/2,b.py+2,w,hh*.35); }
+    });
+  }};
+}
+
+function initGL(){
+  var pick=(location.search.match(/[?&]bg=(contour|aurora|orbs|net|grid|stars|blob|bars|ring)/)||[])[1]||BG;
+  return ({contour:bgContour, aurora:bgAurora, orbs:bgOrbs, net:bgNet, grid:bgGrid, stars:bgStars, blob:bgBlob, bars:bgBars, ring:bgRing}[pick]||bgContour)();
 }
 
 /* ---------- router & curtain ---------- */
@@ -272,6 +565,7 @@ var peek=$('#peek'), pkBox=$('#pkBox'), pkImg=$('#pkImg'), peekCard=null, openT=
 var canPeek=matchMedia('(hover:hover) and (min-width:1001px)');
 function fillPeek(card){
   var slug=card.querySelector('h3 a').getAttribute('href').split('/').pop(), v=views[slug]; if(!v) return false;
+  if(peekCard!==card) swapPeek('');   /* each project opens side by side */
   var pr=v.querySelector('.proj'), links=pr.querySelectorAll('.plinks a'), img=card.querySelector('.fview img');
   ['--glow','--glowtxt'].forEach(function(k){ pkBox.style.setProperty(k,card.style.getPropertyValue(k)); });
   $('#pkKind').textContent=pr.querySelector('.kind').textContent;
@@ -353,6 +647,18 @@ peek.addEventListener('pointermove',function(e){
 /* leaving the window closes it; a box that is already fading out ignores this, so it can't close the next one */
 peek.addEventListener('pointerleave',function(){ if(!peekCard || peek.classList.contains('leaving')) return; clearTimeout(closeT); closeT=setTimeout(closePeek,200); });
 peek.addEventListener('click',function(e){ if(!pkBox.contains(e.target)) closePeek(); });
+/* swap the two halves on hover: point at the preview or the details and that half comes forward and grows
+   while the other sinks back. The half you point at gets bigger under the mouse, so it never flips back
+   and forth. Waits until the box has finished opening, so it doesn't jump the moment it appears. */
+var pkShotEl=$('#pkShot'), pkBodyEl=$('#pkBody'), swapMode='';
+function swapPeek(mode){
+  if(mode===swapMode) return; swapMode=mode;
+  pkBox.classList.toggle('f-info',mode==='info'); pkBox.classList.toggle('f-shot',mode==='shot');
+  setTimeout(setPans,720);                                         /* the preview changed size: re-measure its scroll */
+}
+function hoverSwap(mode){ return function(e){ if(e.pointerType==='mouse' && peekCard && peek.classList.contains('shown')) swapPeek(mode); }; }
+pkShotEl.addEventListener('pointerenter',hoverSwap('shot')); pkShotEl.addEventListener('pointermove',hoverSwap('shot'));
+pkBodyEl.addEventListener('pointerenter',hoverSwap('info')); pkBodyEl.addEventListener('pointermove',hoverSwap('info'));
 addEventListener('wheel',function(){ if(peekCard) closePeek(); },{passive:true});
 document.addEventListener('keydown',function(e){ if(peekCard && /^(Escape|Arrow|Page|Home|End| )/.test(e.key)) closePeek(); });
 function onViewShown(v){

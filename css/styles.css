@@ -759,3 +759,32 @@ body:not([data-view="home"]) .dots{display:none}
 .pj-go{width:24px; height:24px; border-color:transparent; color:var(--muted); opacity:.7}
 .pj-go svg{width:14px; height:14px; stroke-width:1.8}
 .card:hover .pj-go, .card.peeked .pj-go{background:none; border-color:transparent; color:var(--glowtxt,var(--violet)); opacity:1; transform:translateX(4px)}
+
+/* more breathing room between and inside the project tiles (square size is recalculated from this gap) */
+@media (min-width:641px){
+  .pgrid{gap:clamp(1.3rem,2.2vw,2.25rem)}
+  .pgrid .card .shot{padding:.75rem .75rem 0}
+  .pgrid .card-body{padding:.8rem 1.1rem .95rem}
+  .pgrid .card h3{font-size:clamp(1rem,1.25vw,1.2rem)}
+  .card-more{padding:1.4rem 1.6rem}
+}
+
+/* ===== PEEK SWAP: click one half and it sinks back with a slight turn while the other comes forward ===== */
+.pk-box{perspective:1600px; transition:grid-template-columns .7s cubic-bezier(.22,1,.36,1)}
+.pk-shot, .pk-body{position:relative; transform-origin:center; transition:transform .7s cubic-bezier(.22,1,.36,1), opacity .5s ease, filter .5s ease; cursor:pointer}
+.pk-body{background:var(--solid); z-index:1}
+.pk-body a, .pk-body button{cursor:pointer}
+/* details forward: the preview narrows, tilts away and dims; the details widen and lift */
+.pk-box.f-info{grid-template-columns:minmax(0,.8fr) minmax(0,1.5fr)}
+.pk-box.f-info .pk-shot{transform:translateZ(-140px) rotateY(24deg) scale(.9); opacity:.55; filter:saturate(.7)}
+.pk-box.f-info .pk-body{transform:translateZ(30px) scale(1.02); z-index:2}
+.pk-box.f-info .pk-body .desc{font-size:1.02rem}
+/* preview forward: the details narrow, tilt away and dim; the preview widens and lifts */
+.pk-box.f-shot{grid-template-columns:minmax(0,2.1fr) minmax(0,.7fr)}
+.pk-box.f-shot .pk-body{transform:translateZ(-140px) rotateY(-24deg) scale(.9); opacity:.55}
+.pk-box.f-shot .pk-shot{transform:translateZ(30px) scale(1.02); z-index:2}
+.pk-box.f-shot .pk-body .desc, .pk-box.f-shot .pk-body .facts{display:none}
+/* the little note at the bottom of the box */
+.pk-swap{position:absolute; left:0; right:0; bottom:.55rem; margin:0; text-align:center; font-family:var(--mono); font-size:.66rem; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); opacity:.75; pointer-events:none; z-index:3}
+/* hover swap: the halves aren't buttons any more, so no pointer hand outside the links */
+.pk-shot, .pk-body{cursor:default}
