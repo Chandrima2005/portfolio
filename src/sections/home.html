@@ -1,55 +1,55 @@
-<!-- HOME: eight full-screen pages. Scrolling, swiping or the arrow keys move one whole page at a time -->
+<!-- HOME: full-screen pages. Scrolling, swiping or the arrow keys move one whole page at a time,
+     and the address bar follows: /, /projects, /experience, /education, /skills, /contact -->
 <div class="view" data-view="home" data-label="Home" data-title="Chandrima Das · ML, Computer Vision & Signal Processing">
   <section id="journey" aria-label="Chandrima Das">
     <div class="stage" id="track">
       <section class="pg pg-intro" id="home" data-label="Home">
-        <div class="wrap intro-grid">
-          <div class="intro-main">
+        <div class="wrap hero-grid">
+          <div class="hero-main">
             <p class="hello"><span>Hi, I'm</span></p>
             <h1 class="big-name" id="homeH" tabindex="-1"><span class="ln"><span>Chandrima</span></span><span class="ln"><span>Das</span></span></h1>
-            <div class="intro-foot">
-              <p class="lede reveal-up d1">A data scientist with a background in <strong>electronics and communication engineering</strong>. I work across Python, data analytics, machine learning and signal processing, and I design interfaces that make the results clear and easy to use.</p>
-              <div class="cta reveal-up d2">
-                <a class="btn primary" href="#projects" data-cursor-hover>Explore my work</a>
-                <a class="btn" href="mailto:daschandrima2005@gmail.com" data-cursor-hover>Email me</a>
-              </div>
+            <p class="lede reveal-up d1">A data scientist with a background in <strong>electronics and communication engineering</strong>. I build machine learning, signal processing and LLM tools, and I ship each one as something you can open and use.</p>
+            <div class="cta reveal-up d2">
+              <a class="btn primary" href="/projects" data-cursor-hover>See my projects</a>
+              <a class="btn" href="mailto:daschandrima2005@gmail.com" data-cursor-hover>Email me</a>
             </div>
           </div>
-          <aside class="intro-side reveal-up d3" aria-label="Currently">
-            <p class="is-h"><span class="is-live" aria-hidden="true"></span>Currently</p>
-            <ul class="is-list">
-              <li style="--c:var(--cyan)"><b>M.Tech, Robotics &amp; AI</b><span>Indian Institute of Technology Guwahati</span></li>
-              <li style="--c:var(--violet)"><b>Junior Data Scientist</b><span>Calsoft</span></li>
-              <li style="--c:var(--warm)"><b>ML research</b><span>Saha Institute of Nuclear Physics</span></li>
-            </ul>
+          <!-- CURRENTLY: two rows; the highlight moves from one to the next, hovering a row holds it -->
+          <aside class="now reveal-up d2" id="now" aria-labelledby="nowH">
+            <p class="now-h" id="nowH"><span class="is-live" aria-hidden="true"></span>Currently</p>
+            <ol class="now-rows">
+              <li class="now-row on" style="--c:var(--cyan)">
+                <span class="now-no" aria-hidden="true">01</span>
+                <div class="now-txt"><small>Studying</small><b>M.Tech, Robotics &amp; AI</b><span>Indian Institute of Technology Guwahati</span></div>
+                <span class="now-when">2026 –</span>
+                <i class="now-bar" aria-hidden="true"></i>
+              </li>
+              <li class="now-row" style="--c:var(--violet)">
+                <span class="now-no" aria-hidden="true">02</span>
+                <div class="now-txt"><small>Working</small><b>Junior Data Scientist</b><span>Calsoft</span></div>
+                <span class="now-when">Dec 2025 –</span>
+                <i class="now-bar" aria-hidden="true"></i>
+              </li>
+            </ol>
           </aside>
         </div>
-        <a class="is-scroll reveal-up d3" href="#projects" data-cursor-hover><span class="is-mouse" aria-hidden="true"><i></i></span><b>Scroll to explore</b><span class="is-chev" aria-hidden="true"><i></i><i></i></span></a>
+        <a class="is-scroll reveal-up d3" href="/projects" data-cursor-hover><span class="is-mouse" aria-hidden="true"><i></i></span><b>Scroll to explore</b><span class="is-chev" aria-hidden="true"><i></i><i></i></span></a>
       </section>
 
 <!-- include: sections/projects.html -->
 <!-- include: sections/experience.html -->
 <!-- include: sections/skills.html -->
 
-      <section class="pg pg-signal" id="signal" data-label="Signal">
-        <div class="wrap">
-          <p class="signal-line"><span>Noise is loud.</span><span>Signal is patient.</span></p>
-          <p class="signal-sub">I believe smart work pays off only when it is built on hard work. I adapt quickly to new problems, tools and roles, and I bring the same care to each of them.</p>
-        </div>
-      </section>
-
 <!-- include: sections/contact.html -->
     </div>
 
     <nav class="dots" id="dots" aria-label="Pages">
-      <a href="#home"><span>Intro</span></a>
-      <a href="#projects"><span>Projects</span></a>
-      <a href="#projects-more"><span>More projects</span></a>
-      <a href="#experience"><span>Experience</span></a>
-      <a href="#education"><span>Education</span></a>
-      <a href="#skills"><span>Skills</span></a>
-      <a href="#signal"><span>Signal</span></a>
-      <a href="#contact"><span>Contact</span></a>
+      <a href="/"><span>Intro</span></a>
+      <a href="/projects"><span>Projects</span></a>
+      <a href="/experience"><span>Experience</span></a>
+      <a href="/education"><span>Education</span></a>
+      <a href="/skills"><span>Skills</span></a>
+      <a href="/contact"><span>Contact</span></a>
     </nav>
   </section>
 </div>

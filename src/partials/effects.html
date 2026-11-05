@@ -1,4 +1,20 @@
-<!-- Custom cursor, page-transition curtain and the 3D background canvas -->
+<!-- Custom cursor, page-transition curtain, and the 3D background canvas -->
+<!-- cursor: dot + trailing ring; corner brackets over links, and a label tag over projects -->
 <div id="cursor" aria-hidden="true"><div class="c-dot"></div><div class="c-ring"><div class="c-box"><i></i><i></i><i></i><i></i></div><span class="c-tag"><b></b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M8 7h9v9"/></svg></span></div></div>
 <div id="curtain" aria-hidden="true"><span></span></div>
 <canvas id="gl" aria-hidden="true"></canvas>
+<!-- Peek: hovering a project card opens it in this box in the middle of the screen (filled in by js/main.js) -->
+<div id="peek" aria-hidden="true">
+  <div class="pk-box" id="pkBox">
+    <a class="pk-shot" id="pkShot" target="_blank" rel="noopener" data-cursor="Visit" tabindex="-1"><div class="frame"><div class="fbar"><i></i><i></i><i></i><span id="pkUrl"></span></div><div class="fview"><img id="pkImg" alt=""></div></div></a>
+    <div class="pk-body">
+      <p class="kind" id="pkKind"></p>
+      <h3 id="pkName"></h3>
+      <p class="tagline" id="pkTag"></p>
+      <p class="desc" id="pkDesc"></p>
+      <ul class="facts" id="pkFacts"></ul>
+      <a class="pk-go" id="pkGo" target="_blank" rel="noopener" data-cursor-hover tabindex="-1">Click here to check it out <span aria-hidden="true">↗</span></a>
+      <div class="pk-sub"><a id="pkSrc" target="_blank" rel="noopener" data-cursor-hover tabindex="-1">Source</a><a id="pkMore" data-cursor-hover tabindex="-1">Full details →</a></div>
+    </div>
+  </div>
+</div>

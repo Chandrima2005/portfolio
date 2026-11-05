@@ -8,19 +8,21 @@ build.py                ← merges the files in src/ into index.html
 src/
   layout.html           ← page skeleton: <head>, fonts, and the include order
   sections/
-    home.html           ← the landing page: eight full-screen pages (intro, then includes the files below, signal)
-    projects.html       ← project pages 2 and 3: three rows, then two rows + GitHub
-    project-details.html← one full-screen view per project (#gradient-atlas, #index, ...)
-    experience.html     ← pages 4 and 5: work, then education + research
-    skills.html         ← page 6: skills deck and tools marquee
-    contact.html        ← page 8: contact rows and footer
+    home.html           ← full-screen pages, one per scroll: intro with a "Currently" panel, then the files below
+    projects.html       ← all five projects on one page, 3 x 2 grid (/projects)
+    project-details.html← one page per project (/projects/gradient-atlas, /projects/index, ...)
+    experience.html     ← timelines for work + research and education (/experience, /education)
+    skills.html         ← animated skills deck and tools marquee (/skills)
+    contact.html        ← contact rows and footer (/contact)
   partials/
     loader.html         ← falling-letters loading screen
-    header.html         ← top bar with the Menu button
+    header.html         ← top bar: section links and the Menu button
     menu.html           ← full-screen menu
     effects.html        ← custom cursor, page-transition curtain, 3D background canvas
 css/styles.css          ← all styling
-js/main.js              ← all behaviour (routing, 3D background, animations)
+js/main.js              ← all behaviour (page scrolling, routing, 3D background, animations)
+vercel.json             ← sends clean paths like /projects to index.html
+serve.py                ← local preview server that does the same
 assets/images/          ← project screenshots
 ```
 
@@ -35,4 +37,5 @@ because `index.html` links to them directly.
 
 ## Previewing locally
 
-Run `python -m http.server` in this folder and open http://localhost:8000.
+Run `python serve.py` in this folder and open http://localhost:8000.
+(`python -m http.server` won't work for paths like /projects.)

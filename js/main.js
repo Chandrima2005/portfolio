@@ -63,9 +63,11 @@ function setPage(i,instant){
   pages.forEach(function(pg,k){ pg.classList.toggle('on',k===i); pg.inert=k!==i; });
   dots.forEach(function(d,k){ d.classList.toggle('on',k===i); });
   var id=pages[i].id;
-  here.textContent=pages[i].dataset.label;
-  markLinks(id==='projects-more'?'projects':id);
-  if(current==='home' && location.hash.slice(1)!==id) history.replaceState(null,'',id==='home'?location.pathname+location.search:'#'+id);
+  if(here) here.textContent=pages[i].dataset.label;
+  markLinks(id);
+  /* the address bar follows the page: /, /projects, /experience ... */
+  var path=id==='home'?'/':'/'+id;
+  if(current==='home' && location.pathname!==path) history.replaceState(null,'',path+location.search);
 }
 function goPage(d){ var now=performance.now(); if(pi+d<0||pi+d>=pages.length) return; setPage(pi+d); lockUntil=now+950; lastGo=now; }
 function paging(){ return current==='home' && !busy && !body.classList.contains('menu-open'); }
@@ -197,9 +199,15 @@ var current=null, busy=false;
 var clickX=innerWidth/2, clickY=innerHeight/2;
 document.addEventListener('click',function(e){ clickX=e.clientX; clickY=e.clientY; },true);
 function parse(){
-  var h=location.hash.slice(1)||'home';
-  if(PAGE[h]!==undefined) return {view:'home',page:PAGE[h]};
-  if(views[h] && h!=='home') return {view:h};
+  /* old links used #projects or #gradient-atlas: turn them into paths */
+  var h=location.hash.slice(1);
+  if(h){
+    var to=h==='projects-more'?'/projects': PAGE[h]!==undefined?(h==='home'?'/':'/'+h) : (views[h]&&h!=='home'?'/projects/'+h:null);
+    if(to) history.replaceState(null,'',to+location.search);
+  }
+  var parts=location.pathname.replace(/\/+$/,'').split('/').filter(Boolean);
+  if(parts[0]==='projects' && parts[1] && views[parts[1]] && parts[1]!=='home') return {view:parts[1]};
+  if(parts.length===1 && PAGE[parts[0]]!==undefined) return {view:'home',page:PAGE[parts[0]]};
   return {view:'home',page:0};
 }
 function labelFor(r){ return r.view==='home'? pages[r.page].dataset.label : views[r.view].dataset.label; }
@@ -212,11 +220,11 @@ function apply(r){
   window.scrollTo(0,0);
   if(r.view==='home'){
     /* coming back from a project: land on the page that holds its row */
-    var card=prev && prev!=='home' ? $('.pc[href="#'+prev+'"]') : null;
+    var card=prev && prev!=='home' ? $('.card h3 a[href="/projects/'+prev+'"]') : null;
     var page=card? pages.indexOf(card.closest('.pg')) : r.page;
     pi=-1; setPage(page,true); ps=p;
   } else {
-    here.textContent='Projects'; markLinks('projects');
+    if(here) here.textContent='Projects'; markLinks('projects');
   }
   requestAnimationFrame(function(){ views[r.view].classList.add('shown'); onViewShown(r.view); });
   var h=r.view==='home'? pages[pi].querySelector('h1,h2') : views[r.view].querySelector('h1');
@@ -242,21 +250,25 @@ function route(){
     },780);
   },720);
 }
-addEventListener('hashchange',route);
-/* links to another landing page just slide there */
+function go(path){ if(path!==location.pathname) history.pushState(null,'',path+location.search); route(); }
+addEventListener('popstate',route);
+/* internal links change the path without reloading; a link to another landing page just slides there */
 document.addEventListener('click',function(e){
-  var a=e.target.closest('a[href^="#"]'); if(!a) return;
-  var h=a.getAttribute('href').slice(1)||'home';
-  if(current==='home' && PAGE[h]!==undefined){ e.preventDefault(); setMenu(false); setPage(PAGE[h]); }
+  if(e.defaultPrevented || e.button!==0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+  var a=e.target.closest('a[href^="/"]'); if(!a || a.target==='_blank') return;
+  e.preventDefault(); if(typeof closePeek==='function') closePeek();
+  var href=a.getAttribute('href'), id=href.replace(/^\/+|\/+$/g,'')||'home';
+  if(current==='home' && PAGE[id]!==undefined){ setMenu(false); setPage(PAGE[id]); return; }
+  go(href);
 });
 /* keyboard on a project: Esc goes back, arrows step through projects */
 document.addEventListener('keydown',function(e){
   if(current==='home'||busy||body.classList.contains('menu-open')) return;
   var v=views[current], to=null;
-  if(e.key==='Escape') to='#projects';
+  if(e.key==='Escape') to='/projects';
   if(e.key==='ArrowLeft') to=v.querySelector('.pd-prev').getAttribute('href');
   if(e.key==='ArrowRight') to=v.querySelector('.pd-next').getAttribute('href');
-  if(to){ clickX=innerWidth/2; clickY=innerHeight/2; location.hash=to; }
+  if(to){ clickX=innerWidth/2; clickY=innerHeight/2; go(to); }
 });
 
 /* ---------- per-view setup ---------- */
@@ -264,6 +276,90 @@ function setPans(){
   $$('.fview').forEach(function(v){ var img=v.querySelector('img'); if(!img) return; var d=img.offsetHeight-v.offsetHeight; img.style.setProperty('--pan',(d>0?-d:0)+'px'); img.style.setProperty('--pt',clamp(d/160,4,18).toFixed(1)+'s'); img.style.setProperty('--pa',clamp(d/70,6,30).toFixed(1)+'s'); });
 }
 $$('.fview img').forEach(function(i){ i.addEventListener('load',setPans); });
+/* ---------- peek: hovering a project card opens it big, in a box in the middle of the screen ----------
+   The box zooms out of the card, shows the live preview scrolling plus the project's details (taken from
+   its detail page), and shrinks back into the card when the mouse leaves both, on scroll, or on Esc. */
+var peek=$('#peek'), pkBox=$('#pkBox'), pkImg=$('#pkImg'), peekCard=null, openT=0, closeT=0;
+var canPeek=matchMedia('(hover:hover) and (min-width:1001px)');
+function fillPeek(card){
+  var slug=card.querySelector('h3 a').getAttribute('href').split('/').pop(), v=views[slug]; if(!v) return false;
+  var pr=v.querySelector('.proj'), links=pr.querySelectorAll('.plinks a'), img=card.querySelector('.fview img');
+  ['--glow','--glowtxt'].forEach(function(k){ pkBox.style.setProperty(k,card.style.getPropertyValue(k)); });
+  $('#pkKind').textContent=pr.querySelector('.kind').textContent;
+  $('#pkName').textContent=pr.querySelector('h1').textContent;
+  $('#pkTag').textContent=pr.querySelector('.tagline').textContent;
+  $('#pkDesc').textContent=pr.querySelector('.desc').textContent;
+  $('#pkFacts').innerHTML=pr.querySelector('.facts').innerHTML;
+  $('#pkUrl').textContent=pr.querySelector('.fbar span').textContent;
+  $('#pkShot').href=links[0].href; $('#pkGo').href=links[0].href; $('#pkSrc').href=links[1].href;
+  $('#pkMore').setAttribute('href','/projects/'+slug);
+  if(pkImg.getAttribute('src')!==img.getAttribute('src')) pkImg.src=img.getAttribute('src');
+  pkImg.alt=img.alt;
+  return true;
+}
+/* the box zooms in place, in the middle of the screen: from 90% to full size while fading in,
+   leaning a little from the side of the card you hovered. Small scale changes stay sharp and cheap. */
+function lean(card){
+  var c=card.getBoundingClientRect(), dx=(c.left+c.width/2-innerWidth/2)*.06, dy=(c.top+c.height/2-innerHeight/2)*.06;
+  return 'translate3d('+dx.toFixed(1)+'px,'+dy.toFixed(1)+'px,0) scale(.9)';
+}
+function openPeek(card){
+  if(!fillPeek(card)) return;
+  clearTimeout(closePeek.t); clearTimeout(openPeek.t); clearTimeout(closeT);
+  if(peekCard && peekCard!==card) peekCard.classList.remove('peeked');
+  peekCard=card; card.classList.add('peeked');
+  /* wait until the screenshot is decoded, so the zoom never stalls on it */
+  var ready=pkImg.decode? pkImg.decode().catch(function(){}) : Promise.resolve();
+  ready.then(function(){
+    if(peekCard!==card) return;
+    /* if the box is still fading out, carry on from where it is instead of jumping */
+    var leaving=peek.classList.contains('leaving'), curT=leaving?getComputedStyle(pkBox).transform:'', curO=leaving?getComputedStyle(pkBox).opacity:'0';
+    peek.classList.remove('shown','leaving');
+    peek.classList.add('open'); peek.setAttribute('aria-hidden','false');
+    if(reduce){ pkBox.style.transition='none'; pkBox.style.transform='none'; pkBox.style.opacity='1'; peek.classList.add('shown'); setPans(); return; }
+    pkBox.style.transition='none'; pkBox.style.transform=leaving&&curT!=='none'?curT:lean(card); pkBox.style.opacity=curO;
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){
+      if(peekCard!==card) return;
+      pkBox.style.transition='transform .5s cubic-bezier(.22,1,.36,1), opacity .3s ease-out';
+      pkBox.style.transform='translate3d(0,0,0) scale(1)'; pkBox.style.opacity='1';
+      openPeek.t=setTimeout(function(){ if(peekCard===card){ peek.classList.add('shown'); setPans(); } },200);
+    }); });
+  });
+}
+function closePeek(){
+  clearTimeout(openT); clearTimeout(closeT); clearTimeout(openPeek.t); openT=0;
+  var card=peekCard; if(!card) return;
+  peekCard=null; card.classList.remove('peeked'); peek.setAttribute('aria-hidden','true'); peek.classList.remove('shown');
+  if(reduce){ peek.classList.remove('open'); return; }
+  /* a gentle reverse of the opening: the text fades first, then the box eases back toward its card
+     while the dim fades with it; cards underneath can be hovered again straight away */
+  peek.classList.add('leaving');
+  pkBox.style.transition='transform .55s cubic-bezier(.33,1,.68,1), opacity .45s cubic-bezier(.33,1,.68,1) .05s';
+  pkBox.style.transform=lean(card); pkBox.style.opacity='0';
+  closePeek.t=setTimeout(function(){ if(!peekCard) peek.classList.remove('open','leaving'); },600);
+}
+/* hovering a card, or simply moving over it again after the box closed, opens it */
+function armPeek(card,e){
+  if(e.pointerType!=='mouse' || !canPeek.matches || busy || peekCard || openT) return;
+  openT=setTimeout(function(){ openT=0; openPeek(card); },180);
+}
+$$('.pgrid > .card:not(.card-more)').forEach(function(card){
+  card.addEventListener('pointerenter',function(e){ armPeek(card,e); });
+  card.addEventListener('pointermove',function(e){ armPeek(card,e); });
+  card.addEventListener('pointerleave',function(){ if(!peekCard){ clearTimeout(openT); openT=0; } });
+});
+/* while open, the box stays as long as the mouse is over it or over the card it came from */
+peek.addEventListener('pointermove',function(e){
+  if(!peekCard) return;
+  var r=peekCard.getBoundingClientRect(), inCard=e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom;
+  clearTimeout(closeT);
+  if(!pkBox.contains(e.target) && !inCard) closeT=setTimeout(closePeek,260);
+});
+/* leaving the window closes it; a box that is already fading out ignores this, so it can't close the next one */
+peek.addEventListener('pointerleave',function(){ if(!peekCard || peek.classList.contains('leaving')) return; clearTimeout(closeT); closeT=setTimeout(closePeek,200); });
+peek.addEventListener('click',function(e){ if(!pkBox.contains(e.target)) closePeek(); });
+addEventListener('wheel',function(){ if(peekCard) closePeek(); },{passive:true});
+document.addEventListener('keydown',function(e){ if(peekCard && /^(Escape|Arrow|Page|Home|End| )/.test(e.key)) closePeek(); });
 function onViewShown(v){
   if(v==='home'){ fitPages(); setPans(); sizeSkills(); if(gl) gl.size(); }
   else { var pr=views[v].querySelector('.proj'); pr.classList.remove('in'); void pr.offsetWidth; pr.classList.add('in'); setPans(); }
@@ -376,11 +472,33 @@ if(fine && !reduce){
   document.addEventListener('pointerleave',function(){ cx=cy=-100; });
 }
 
+
+/* ---------- "Currently" panel: the highlight moves row to row; hovering a row holds it there ---------- */
+(function(){
+  var box=$('#now'), rows=$$('.now-row',box), k=0, timer=0, DUR=4200;
+  if(!box || rows.length<2) return;
+  box.style.setProperty('--nd',DUR+'ms');
+  function show(i,hold){
+    k=i;
+    rows.forEach(function(r,j){ r.classList.toggle('on',j===i); r.classList.remove('tick','held'); });
+    void rows[i].offsetWidth;
+    rows[i].classList.add(hold?'held':'tick');
+  }
+  function run(){ clearTimeout(timer); timer=setTimeout(function(){ if(current==='home') show((k+1)%rows.length,false); run(); },DUR); }
+  if(reduce){ rows[0].classList.add('on'); return; }
+  show(0,false); run();
+  rows.forEach(function(r,i){ r.addEventListener('pointerenter',function(){ clearTimeout(timer); show(i,true); }); });
+  box.addEventListener('pointerleave',function(){ show(k,false); run(); });
+})();
+
 /* ---------- loader ----------
-   Two styles. A: boot log + progress bar + name typed behind a cursor.
+   Five styles. A: boot log + progress bar + name typed behind a cursor.
    B: oscilloscope "signal lock" - a noisy trace settles into a clean signal, then the name slides up.
-   Pick one with LOADER below, or preview with ?loader=a / ?loader=b */
-var LOADER='b';
+   C: big 0-100 counter, skills flicking past, then the screen lifts away.
+   D: the name drawn as a glowing outline, then filled.
+   E: particles fly in and form the name, then burst as the site appears.
+   Pick one with LOADER below, or preview with ?loader=a ... ?loader=e */
+var LOADER='e';
 function startSite(){ body.classList.add('ready'); }
 var loader=$('#loader');
 function finishLoader(){
@@ -459,10 +577,130 @@ function loaderB(){
   }
   return frame;
 }
+/* C: counter. A big 0-100 counter, a line growing across, skills flicking past; at 100 the screen lifts away */
+function loaderC(){
+  loader.classList.add('ldc');
+  loader.innerHTML='<div class="ldc-top"><span>Chandrima Das</span><span>Portfolio &middot; 2026</span></div>'+
+    '<div class="ldc-mid"><div class="ldc-words" id="lcW"><span>Machine learning</span><span>Signal processing</span><span>Computer vision</span><span>Data science</span></div></div>'+
+    '<div class="ldc-bot"><div class="ldc-num"><span id="lcNum">0</span><i>%</i></div><div class="ldc-line"><i id="lcFill"></i></div></div>';
+  var num=$('#lcNum'), fill=$('#lcFill'), words=$$('#lcW span'), DUR=2100, t0=0, done=false, wi=-1;
+  function frame(now){
+    if(!t0) t0=now;
+    var t=Math.min(1,(now-t0)/DUR), e=t<.5? 2*t*t : 1-Math.pow(-2*t+2,2)/2;
+    num.textContent=Math.round(e*100); fill.style.transform='scaleX('+e.toFixed(4)+')';
+    var k=Math.min(words.length-1,Math.floor(t*words.length));
+    if(k!==wi){ words.forEach(function(w,j){ w.classList.toggle('on',j===k); w.classList.toggle('past',j<k); }); wi=k; }
+    if(t<1){ requestAnimationFrame(frame); return; }
+    if(done) return; done=true;
+    setTimeout(function(){ loader.classList.add('lift'); setTimeout(startSite,300); setTimeout(function(){ loader.remove(); },1100); },180);
+  }
+  return frame;
+}
+
+/* shared 0-100% indicator for loaders D and E: a thin glowing line, a status word and a percentage */
+function progressUI(words){
+  var el=document.createElement('div'); el.className='ldp';
+  el.innerHTML='<div class="ldp-line"><i></i></div><div class="ldp-meta"><span class="ldp-stat"></span><span class="ldp-pct">000%</span></div>';
+  loader.appendChild(el);
+  var line=el.querySelector('.ldp-line i'), pct=el.querySelector('.ldp-pct'), stat=el.querySelector('.ldp-stat'), last=-1;
+  return function(f){
+    f=clamp(f,0,1); var n=Math.floor(f*100); if(n===last) return; last=n;
+    line.style.transform='scaleX('+f.toFixed(4)+')'; pct.textContent=('00'+n).slice(-3)+'%';
+    stat.textContent=n>=100?'ready':words[Math.min(words.length-1,Math.floor(f*words.length))];
+    el.classList.toggle('full',n>=100);
+  };
+}
+
+/* D: signature. The name is drawn as a glowing outline, stroke by stroke, then fills with the gradient */
+function loaderD(){
+  loader.classList.add('ldd');
+  var two=innerWidth<700;
+  loader.innerHTML='<div class="ld-grid"></div>'+
+    '<svg class="ldd-svg" viewBox="0 0 1200 '+(two?420:260)+'" aria-hidden="true"><defs><linearGradient id="lddG" x1="0" x2="1"><stop offset="0" style="stop-color:var(--violet)"/><stop offset="1" style="stop-color:var(--cyan)"/></linearGradient></defs>'+
+    /* each word twice: a filled copy that fades in underneath, and the outline that draws itself on top */
+    (two? ['ldd-f','ldd-t'].map(function(c){ return '<text x="600" y="190" text-anchor="middle" class="'+c+'">Chandrima</text><text x="600" y="380" text-anchor="middle" class="'+c+' ldd-t2">Das</text>'; }).join('')
+        : ['ldd-f','ldd-t'].map(function(c){ return '<text x="600" y="190" text-anchor="middle" textLength="1120" lengthAdjust="spacingAndGlyphs" class="'+c+'">Chandrima Das</text>'; }).join(''))+
+    '</svg><p class="ldd-sub">Data science &middot; Machine learning &middot; Signal processing</p>';
+  var prog=progressUI(['drawing outline','tracing letters','filling colour']), t0=0, DUR=2300, done=false;
+  function frame(now){
+    if(!t0){ t0=now; loader.classList.add('go'); }
+    var f=(now-t0)/DUR; prog(1-Math.pow(1-clamp(f,0,1),1.6));
+    if(f<1){ requestAnimationFrame(frame); return; }
+    if(done) return; done=true; setTimeout(finishLoader,200);
+  }
+  return frame;
+}
+
+/* E: particles. A glowing scan line sweeps across the name carrying the percentage; dots behind it
+   fly into place and light up, dots ahead still float faintly. At 100% the name is whole, then it bursts. */
+function loaderE(){
+  loader.classList.add('lde');
+  loader.innerHTML='<canvas id="leCv"></canvas><p class="lde-sub">Portfolio &middot; 2026</p>';
+  var cv=$('#leCv'), x=cv.getContext('2d'), d=Math.min(devicePixelRatio,2), W=innerWidth, H=innerHeight;
+  cv.width=Math.round(W*d); cv.height=Math.round(H*d); x.setTransform(d,0,0,d,0,0);
+  function rgb(hex){ var h=hex.replace('#',''); if(h.length===3) h=h.split('').map(function(c){return c+c}).join(''); var n=parseInt(h,16); return [n>>16&255,n>>8&255,n&255]; }
+  var A=rgb(css('--violet')||'#6B35C9'), B=rgb(css('--cyan')||'#0A869E'), INK=rgb(css('--muted')||'#5D587A'), CY=css('--cyan')||'#0A869E', TX=css('--ink')||'#16132B';
+  var pts=[], minX=0, maxX=1, minY=0, maxY=1;
+  function build(){
+    var off=document.createElement('canvas'), o=off.getContext('2d'); off.width=W; off.height=H;
+    o.fillStyle='#000'; o.textAlign='center'; o.textBaseline='middle';
+    var fs;
+    if(W<700){ fs=Math.min(W*.2,H*.16); o.font='800 '+fs+'px "Bricolage Grotesque", sans-serif'; o.fillText('Chandrima',W/2,H/2-fs*.55); o.fillText('Das',W/2,H/2+fs*.6); }
+    else { fs=Math.min(W*.125,H*.24); o.font='800 '+fs+'px "Bricolage Grotesque", sans-serif'; o.fillText('Chandrima Das',W/2,H/2); }
+    var data=o.getImageData(0,0,W,H).data, step=Math.max(3,Math.round(fs/30)), all=[];
+    for(var yy=0;yy<H;yy+=step) for(var xx=0;xx<W;xx+=step) if(data[(yy*W+xx)*4+3]>128) all.push([xx,yy]);
+    for(var i=all.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)), tmp=all[i]; all[i]=all[j]; all[j]=tmp; }
+    all=all.slice(0,Math.min(all.length,W<700?1100:2200));
+    minX=Infinity; maxX=-Infinity; minY=Infinity; maxY=-Infinity;
+    all.forEach(function(q){ minX=Math.min(minX,q[0]); maxX=Math.max(maxX,q[0]); minY=Math.min(minY,q[1]); maxY=Math.max(maxY,q[1]); });
+    all.forEach(function(q){
+      var u=(q[0]-minX)/Math.max(1,maxX-minX), a=Math.random()*Math.PI*2, rr=60+Math.random()*Math.max(W,H)*.35;
+      pts.push({tx:q[0], ty:q[1], u:u, sx:q[0]+Math.cos(a)*rr, sy:q[1]+Math.sin(a)*rr*.7, ph:Math.random()*6.283, r:step*.42+Math.random()*step*.2,
+        c:'rgb('+Math.round(A[0]+(B[0]-A[0])*u)+','+Math.round(A[1]+(B[1]-A[1])*u)+','+Math.round(A[2]+(B[2]-A[2])*u)+')',
+        vx:(q[0]-W/2)*(.6+Math.random()), vy:(q[1]-H/2)*(.6+Math.random())-80*Math.random()});
+    });
+  }
+  var t0=0, out=false, START=.2, SWEEP=1.5, HOLD=2.05, END=2.75, FLY=.45;
+  function ease(v){ return 1-Math.pow(1-v,3); }
+  var grey='rgba('+INK[0]+','+INK[1]+','+INK[2]+',';
+  function frame(now){
+    if(!t0){ t0=now; build(); }
+    var t=(now-t0)/1000; x.clearRect(0,0,W,H);
+    var f=clamp((t-START)/SWEEP,0,1), sweepU=1-Math.pow(1-f,1.4), scanX=minX+sweepU*(maxX-minX);
+    if(t>HOLD && !out){ out=true; loader.classList.add('out'); startSite(); }
+    for(var i=0;i<pts.length;i++){
+      var p=pts[i], px, py, al, col;
+      if(t<HOLD){
+        /* each dot starts flying as the line approaches it and lands as the line passes */
+        var land=START+SWEEP*(1-Math.pow(1-p.u,1/1.4)), e=ease(clamp((t-(land-FLY))/FLY,0,1));
+        var fx=p.sx+Math.sin(t*1.3+p.ph)*10, fy=p.sy+Math.cos(t*1.1+p.ph)*10;
+        px=fx+(p.tx-fx)*e; py=fy+(p.ty-fy)*e;
+        if(e>=1){ al=1; col=p.c; } else { al=.18+.5*e; col=null; }
+      } else { var b=(t-HOLD)/(END-HOLD), eb=b*b; px=p.tx+p.vx*eb; py=p.ty+p.vy*eb; al=1-b; col=p.c; }
+      if(al<=0) continue;
+      x.fillStyle=col? col : grey+al.toFixed(2)+')'; x.globalAlpha=col?al:1;
+      x.beginPath(); x.arc(px,py,p.r,0,6.283); x.fill();
+    }
+    x.globalAlpha=1;
+    /* the scan line with the percentage riding on top */
+    if(t<HOLD){
+      var top=minY-46, bot=maxY+34, la=t<START+.1?(t/(START+.1)):1;
+      var g=x.createLinearGradient(0,top,0,bot); g.addColorStop(0,'rgba(0,0,0,0)'); g.addColorStop(.2,CY); g.addColorStop(.8,CY); g.addColorStop(1,'rgba(0,0,0,0)');
+      x.globalAlpha=la; x.shadowColor=CY; x.shadowBlur=16; x.fillStyle=g; x.fillRect(scanX-1,top,2,bot-top); x.shadowBlur=0;
+      var label=f>=1?'READY':('00'+Math.floor(sweepU*100)).slice(-3)+'%';
+      x.font='500 13px "IBM Plex Mono", ui-monospace, monospace'; x.textAlign='center'; x.textBaseline='bottom';
+      x.fillStyle=f>=1?CY:TX; x.fillText(label,clamp(scanX,minX+24,maxX-24),top-6);
+      x.globalAlpha=1;
+    }
+    if(t<END){ requestAnimationFrame(frame); return; }
+    loader.remove();
+  }
+  return frame;
+}
 if(reduce){ loader.remove(); startSite(); }
 else{
-  var pick=(location.search.match(/[?&]loader=([ab])/)||[])[1]||LOADER;
-  var run=pick==='a'?loaderA():loaderB();
+  var pick=(location.search.match(/[?&]loader=([a-e])/)||[])[1]||LOADER;
+  var run=({a:loaderA,b:loaderB,c:loaderC,d:loaderD,e:loaderE}[pick]||loaderB)();
   var started=false, kick=function(){ if(!started){ started=true; requestAnimationFrame(run); } };
   if(document.fonts && document.fonts.ready) document.fonts.ready.then(kick);
   setTimeout(kick,700);
@@ -477,7 +715,7 @@ function loop(now){
   var t=(now-t0g)/1000;
   if(current==='home'){
     ps+=(p-ps)*(reduce?1:0.045); if(Math.abs(p-ps)<0.0005) ps=p;
-    if(gl) gl.render(t,ps);
+    if(gl && !peekCard) gl.render(t,ps);  /* the box covers the scene, so skip drawing it */
     if(pages[pi] && pages[pi].id==='skills') drawSkills(t);
   }
   if(fine && !reduce){ rx+=(cx-rx)*0.18; ry+=(cy-ry)*0.18; cdot.style.transform='translate('+cx+'px,'+cy+'px)'; cring.style.transform='translate('+rx+'px,'+ry+'px)'; }

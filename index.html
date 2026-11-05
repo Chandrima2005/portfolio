@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- every path resolves from the site root, so /projects/gradient-atlas still finds css/ and assets/ -->
+<base href="/">
 <title>Chandrima Das · ML, Computer Vision & Signal Processing</title>
 <meta name="description" content="Chandrima Das: M.Tech student in Robotics & AI at IIT Guwahati and Junior Data Scientist. Projects in machine learning, signal processing, RAG and CAD analysis.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,17 +24,36 @@
     <div class="ld-meta"><span id="ldStat">booting</span><span id="ldPct">000%</span></div>
   </div>
 </div>
-<!-- Custom cursor, page-transition curtain and the 3D background canvas -->
+<!-- Custom cursor, page-transition curtain, and the 3D background canvas -->
+<!-- cursor: dot + trailing ring; corner brackets over links, and a label tag over projects -->
 <div id="cursor" aria-hidden="true"><div class="c-dot"></div><div class="c-ring"><div class="c-box"><i></i><i></i><i></i><i></i></div><span class="c-tag"><b></b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M8 7h9v9"/></svg></span></div></div>
 <div id="curtain" aria-hidden="true"><span></span></div>
 <canvas id="gl" aria-hidden="true"></canvas>
-<!-- Top bar -->
+<!-- Peek: hovering a project card opens it in this box in the middle of the screen (filled in by js/main.js) -->
+<div id="peek" aria-hidden="true">
+  <div class="pk-box" id="pkBox">
+    <a class="pk-shot" id="pkShot" target="_blank" rel="noopener" data-cursor="Visit" tabindex="-1"><div class="frame"><div class="fbar"><i></i><i></i><i></i><span id="pkUrl"></span></div><div class="fview"><img id="pkImg" alt=""></div></div></a>
+    <div class="pk-body">
+      <p class="kind" id="pkKind"></p>
+      <h3 id="pkName"></h3>
+      <p class="tagline" id="pkTag"></p>
+      <p class="desc" id="pkDesc"></p>
+      <ul class="facts" id="pkFacts"></ul>
+      <a class="pk-go" id="pkGo" target="_blank" rel="noopener" data-cursor-hover tabindex="-1">Click here to check it out <span aria-hidden="true">↗</span></a>
+      <div class="pk-sub"><a id="pkSrc" target="_blank" rel="noopener" data-cursor-hover tabindex="-1">Source</a><a id="pkMore" data-cursor-hover tabindex="-1">Full details →</a></div>
+    </div>
+  </div>
+</div>
+<!-- Top bar: inline links on wide screens, the Menu button on phones -->
 <header class="bar">
   <div class="wrap">
-    <a class="brand" href="#home" data-cursor-hover>
-      Chandrima Das
-    </a>
-    <span class="here" id="here">Home</span>
+    <a class="brand" href="/" data-cursor-hover>Chandrima Das</a>
+    <nav class="bar-nav" aria-label="Sections">
+      <a href="/projects" data-link="projects">Projects</a>
+      <a href="/experience" data-link="experience">Experience</a>
+      <a href="/skills" data-link="skills">Skills</a>
+      <a href="/contact" data-link="contact">Contact</a>
+    </nav>
     <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="menu" data-cursor-hover><span id="menuTxt">Menu</span><span class="lines" aria-hidden="true"><i></i><i></i></span></button>
   </div>
 </header>
@@ -40,12 +61,12 @@
 <div id="menu" aria-hidden="true">
   <div class="menu-grid">
     <ul class="menu-links">
-      <li><a href="#home" data-link="home">Home <small>Who I am</small></a></li>
-      <li><a href="#projects" data-link="projects">Projects <small>5 live demos</small></a></li>
-      <li><a href="#experience" data-link="experience">Experience <small>Work and research</small></a></li>
-      <li><a href="#education" data-link="education">Education <small>Degrees and school</small></a></li>
-      <li><a href="#skills" data-link="skills">Skills <small>What I work with</small></a></li>
-      <li><a href="#contact" data-link="contact">Contact <small>Say hello</small></a></li>
+      <li><a href="/" data-link="home">Home <small>Who I am</small></a></li>
+      <li><a href="/projects" data-link="projects">Projects <small>5 live builds</small></a></li>
+      <li><a href="/experience" data-link="experience">Experience <small>Work and research</small></a></li>
+      <li><a href="/education" data-link="education">Education <small>Degrees and school</small></a></li>
+      <li><a href="/skills" data-link="skills">Skills <small>What I work with</small></a></li>
+      <li><a href="/contact" data-link="contact">Contact <small>Say hello</small></a></li>
     </ul>
     <div class="menu-side">
       <div><h4>Email</h4><a href="mailto:daschandrima2005@gmail.com">daschandrima2005@gmail.com</a></div>
@@ -56,108 +77,129 @@
 </div>
 
 <main>
-<!-- HOME: eight full-screen pages. Scrolling, swiping or the arrow keys move one whole page at a time -->
+<!-- HOME: full-screen pages. Scrolling, swiping or the arrow keys move one whole page at a time,
+     and the address bar follows: /, /projects, /experience, /education, /skills, /contact -->
 <div class="view" data-view="home" data-label="Home" data-title="Chandrima Das · ML, Computer Vision & Signal Processing">
   <section id="journey" aria-label="Chandrima Das">
     <div class="stage" id="track">
       <section class="pg pg-intro" id="home" data-label="Home">
-        <div class="wrap intro-grid">
-          <div class="intro-main">
+        <div class="wrap hero-grid">
+          <div class="hero-main">
             <p class="hello"><span>Hi, I'm</span></p>
             <h1 class="big-name" id="homeH" tabindex="-1"><span class="ln"><span>Chandrima</span></span><span class="ln"><span>Das</span></span></h1>
-            <div class="intro-foot">
-              <p class="lede reveal-up d1">A data scientist with a background in <strong>electronics and communication engineering</strong>. I work across Python, data analytics, machine learning and signal processing, and I design interfaces that make the results clear and easy to use.</p>
-              <div class="cta reveal-up d2">
-                <a class="btn primary" href="#projects" data-cursor-hover>Explore my work</a>
-                <a class="btn" href="mailto:daschandrima2005@gmail.com" data-cursor-hover>Email me</a>
-              </div>
+            <p class="lede reveal-up d1">A data scientist with a background in <strong>electronics and communication engineering</strong>. I build machine learning, signal processing and LLM tools, and I ship each one as something you can open and use.</p>
+            <div class="cta reveal-up d2">
+              <a class="btn primary" href="/projects" data-cursor-hover>See my projects</a>
+              <a class="btn" href="mailto:daschandrima2005@gmail.com" data-cursor-hover>Email me</a>
             </div>
           </div>
-          <aside class="intro-side reveal-up d3" aria-label="Currently">
-            <p class="is-h"><span class="is-live" aria-hidden="true"></span>Currently</p>
-            <ul class="is-list">
-              <li style="--c:var(--cyan)"><b>M.Tech, Robotics &amp; AI</b><span>Indian Institute of Technology Guwahati</span></li>
-              <li style="--c:var(--violet)"><b>Junior Data Scientist</b><span>Calsoft</span></li>
-              <li style="--c:var(--warm)"><b>ML research</b><span>Saha Institute of Nuclear Physics</span></li>
-            </ul>
+          <!-- CURRENTLY: two rows; the highlight moves from one to the next, hovering a row holds it -->
+          <aside class="now reveal-up d2" id="now" aria-labelledby="nowH">
+            <p class="now-h" id="nowH"><span class="is-live" aria-hidden="true"></span>Currently</p>
+            <ol class="now-rows">
+              <li class="now-row on" style="--c:var(--cyan)">
+                <span class="now-no" aria-hidden="true">01</span>
+                <div class="now-txt"><small>Studying</small><b>M.Tech, Robotics &amp; AI</b><span>Indian Institute of Technology Guwahati</span></div>
+                <span class="now-when">2026 –</span>
+                <i class="now-bar" aria-hidden="true"></i>
+              </li>
+              <li class="now-row" style="--c:var(--violet)">
+                <span class="now-no" aria-hidden="true">02</span>
+                <div class="now-txt"><small>Working</small><b>Junior Data Scientist</b><span>Calsoft</span></div>
+                <span class="now-when">Dec 2025 –</span>
+                <i class="now-bar" aria-hidden="true"></i>
+              </li>
+            </ol>
           </aside>
         </div>
-        <a class="is-scroll reveal-up d3" href="#projects" data-cursor-hover><span class="is-mouse" aria-hidden="true"><i></i></span><b>Scroll to explore</b><span class="is-chev" aria-hidden="true"><i></i><i></i></span></a>
+        <a class="is-scroll reveal-up d3" href="/projects" data-cursor-hover><span class="is-mouse" aria-hidden="true"><i></i></span><b>Scroll to explore</b><span class="is-chev" aria-hidden="true"><i></i><i></i></span></a>
       </section>
 
-      <!-- PROJECTS: two pages of rows. Each row opens its full view from project-details.html -->
-      <section class="pg pg-proj" id="projects" data-label="Projects" aria-labelledby="projectsH">
+      <!-- PROJECTS: all five on one screen, in a 3 x 2 grid; the sixth cell links to GitHub.
+           Cards show the preview and name; hovering one makes it bigger and opens its details and link -->
+      <section class="pg pg-work" id="projects" data-label="Projects" aria-labelledby="projectsH">
         <div class="wrap">
-          <header class="sec-head rv">
-            <h2 id="projectsH" tabindex="-1"><span>Projects</span></h2>
-            <p>Five things I built and shipped, each running live. Hover a preview to scroll the real site, click to open the project.</p>
+          <header class="sh rv">
+            <p class="sh-no">01 <i></i> Selected work</p>
+            <h2 id="projectsH" tabindex="-1">Projects</h2>
           </header>
-          <div class="pcs">
-            <a class="pc rv" href="#gradient-atlas" data-cursor="Open" style="--i:0; --glow:#E08A1E; --glowtxt:#E08A1E">
-              <p class="pc-no"><b>01</b>Interactive ML course</p>
-              <div class="pc-txt">
-                <h3>Gradient Atlas</h3>
-                <p class="pc-line">Learn ML by building it, not memorising it.</p>
-                <p class="pc-tags">Classical ML <i>·</i> NumPy <i>·</i> Interactive graph</p>
-                <span class="pc-go"><span class="pc-arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>View project</span>
+          <div class="pgrid">
+            <article class="card rv" style="--i:0; --glow:#E08A1E; --glowtxt:#C9740F">
+              <a class="shot" href="https://gradient-atlas.chandrima-das.com/" target="_blank" rel="noopener" data-cursor="Visit">
+                <div class="frame"><div class="fbar"><i></i><i></i><i></i><span>gradient-atlas.chandrima-das.com</span></div><div class="fview"><img src="assets/images/gradient-atlas.jpg" alt="Screenshot of the Gradient Atlas website"></div></div>
+              </a>
+              <div class="card-body">
+                <h3><a href="/projects/gradient-atlas">Gradient Atlas</a></h3>
+                <div class="card-xtra"><div>
+                  <p class="kind"><span>01</span>Interactive ML course</p>
+                  <p class="line">Learn ML by building it: 24 chapters, 512 flashcards, NumPy from scratch.</p>
+                  <div class="links"><a class="lk main" href="https://gradient-atlas.chandrima-das.com/" target="_blank" rel="noopener" data-cursor-hover>Click here to check it out <span aria-hidden="true">↗</span></a><a class="lk" href="https://github.com/Chandrima2005/Gradient-atlas" target="_blank" rel="noopener" data-cursor-hover>Source</a><a class="lk" href="/projects/gradient-atlas" data-cursor-hover>Details <span aria-hidden="true">→</span></a></div>
+                </div></div>
               </div>
-              <div class="pc-shot"><div class="frame"><div class="fbar"><i></i><i></i><i></i><span>gradient-atlas.chandrima-das.com</span></div><div class="fview"><img src="assets/images/gradient-atlas.jpg" alt="Screenshot of the Gradient Atlas website"></div></div></div>
-            </a>
-            <a class="pc rv" href="#index" data-cursor="Open" style="--i:1; --glow:#FF8A3D; --glowtxt:#F07A2E">
-              <p class="pc-no"><b>02</b>Physics research with SINP</p>
-              <div class="pc-txt">
-                <h3>InDEx n/γ Discrimination</h3>
-                <p class="pc-line">A neutron's acoustic signature versus a gamma ray's.</p>
-                <p class="pc-tags">Signal processing <i>·</i> STFT <i>·</i> SVM</p>
-                <span class="pc-go"><span class="pc-arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>View project</span>
-              </div>
-              <div class="pc-shot"><div class="frame"><div class="fbar"><i></i><i></i><i></i><span>neutron-gamma-detector.chandrima-das.com</span></div><div class="fview"><img src="assets/images/index-dashboard.jpg" alt="Screenshot of the InDEx neutron/gamma dashboard"></div></div></div>
-            </a>
-            <a class="pc rv" href="#plugged-in" data-cursor="Open" style="--i:2; --glow:#2DD4BF; --glowtxt:#14A99A">
-              <p class="pc-no"><b>03</b>Data analytics dashboard</p>
-              <div class="pc-txt">
-                <h3>Plugged In</h3>
-                <p class="pc-line">Washington State's electric vehicles, in one dashboard.</p>
-                <p class="pc-tags">JavaScript <i>·</i> Data visualisation <i>·</i> EDA</p>
-                <span class="pc-go"><span class="pc-arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>View project</span>
-              </div>
-              <div class="pc-shot"><div class="frame"><div class="fbar"><i></i><i></i><i></i><span>chandrima2005.github.io/analytics-dashboard-assessment</span></div><div class="fview"><img src="assets/images/plugged-in.jpg" alt="Screenshot of the Plugged In EV dashboard"></div></div></div>
-            </a>
-          </div>
-        </div>
-      </section>
+            </article>
 
-      <section class="pg pg-proj" id="projects-more" data-label="Projects" aria-labelledby="projectsMoreH">
-        <div class="wrap">
-          <header class="sec-head rv">
-            <h2 id="projectsMoreH" tabindex="-1"><span>More projects</span></h2>
-            <p>Two more live builds, and the rest of my work on GitHub.</p>
-          </header>
-          <div class="pcs">
-            <a class="pc rv" href="#construction-copilot" data-cursor="Open" style="--i:0; --glow:#7C6CFF; --glowtxt:#6B5BF0">
-              <p class="pc-no"><b>04</b>LLM agent for CAD drawings</p>
-              <div class="pc-txt">
-                <h3>Construction Copilot</h3>
-                <p class="pc-line">Measured, not guessed.</p>
-                <p class="pc-tags">Python <i>·</i> Tool calling <i>·</i> RAG</p>
-                <span class="pc-go"><span class="pc-arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>View project</span>
+            <article class="card rv" style="--i:1; --glow:#FF8A3D; --glowtxt:#E0661A">
+              <a class="shot" href="https://neutron-gamma-detector.chandrima-das.com/" target="_blank" rel="noopener" data-cursor="Visit">
+                <div class="frame"><div class="fbar"><i></i><i></i><i></i><span>neutron-gamma-detector.chandrima-das.com</span></div><div class="fview"><img src="assets/images/index-dashboard.jpg" alt="Screenshot of the InDEx neutron/gamma dashboard"></div></div>
+              </a>
+              <div class="card-body">
+                <h3><a href="/projects/index">InDEx n/γ Discrimination</a></h3>
+                <div class="card-xtra"><div>
+                  <p class="kind"><span>02</span>Physics research with SINP</p>
+                  <p class="line">Neutron vs gamma-ray signals: 512-D STFT features, up to 100% accuracy.</p>
+                  <div class="links"><a class="lk main" href="https://neutron-gamma-detector.chandrima-das.com/" target="_blank" rel="noopener" data-cursor-hover>Click here to check it out <span aria-hidden="true">↗</span></a><a class="lk" href="https://github.com/Chandrima2005/neutron-gamma-detector" target="_blank" rel="noopener" data-cursor-hover>Source</a><a class="lk" href="/projects/index" data-cursor-hover>Details <span aria-hidden="true">→</span></a></div>
+                </div></div>
               </div>
-              <div class="pc-shot"><div class="frame"><div class="fbar"><i></i><i></i><i></i><span>cad.chandrima-das.com</span></div><div class="fview"><img src="assets/images/construction-copilot.jpg" alt="Screenshot of Construction Copilot"></div></div></div>
-            </a>
-            <a class="pc rv" href="#marginalia" data-cursor="Open" style="--i:1; --glow:#E0B04A; --glowtxt:#C4921F">
-              <p class="pc-no"><b>05</b>Retrieval-augmented Q&amp;A</p>
-              <div class="pc-txt">
-                <h3>Marginalia</h3>
-                <p class="pc-line">Ask the document, not the internet.</p>
-                <p class="pc-tags">RAG <i>·</i> pdf.js <i>·</i> Netlify Functions</p>
-                <span class="pc-go"><span class="pc-arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>View project</span>
+            </article>
+
+            <article class="card rv" style="--i:2; --glow:#2DD4BF; --glowtxt:#0F9488">
+              <a class="shot" href="https://chandrima2005.github.io/analytics-dashboard-assessment/" target="_blank" rel="noopener" data-cursor="Visit">
+                <div class="frame"><div class="fbar"><i></i><i></i><i></i><span>chandrima2005.github.io/analytics-dashboard-assessment</span></div><div class="fview"><img src="assets/images/plugged-in.jpg" alt="Screenshot of the Plugged In EV dashboard"></div></div>
+              </a>
+              <div class="card-body">
+                <h3><a href="/projects/plugged-in">Plugged In</a></h3>
+                <div class="card-xtra"><div>
+                  <p class="kind"><span>03</span>Data analytics dashboard</p>
+                  <p class="line">50,000 electric vehicles, every figure computed live from the raw CSV.</p>
+                  <div class="links"><a class="lk main" href="https://chandrima2005.github.io/analytics-dashboard-assessment/" target="_blank" rel="noopener" data-cursor-hover>Click here to check it out <span aria-hidden="true">↗</span></a><a class="lk" href="https://github.com/Chandrima2005/analytics-dashboard-assessment" target="_blank" rel="noopener" data-cursor-hover>Source</a><a class="lk" href="/projects/plugged-in" data-cursor-hover>Details <span aria-hidden="true">→</span></a></div>
+                </div></div>
               </div>
-              <div class="pc-shot"><div class="frame"><div class="fbar"><i></i><i></i><i></i><span>rag-doc-qa-by-chandrima.netlify.app</span></div><div class="fview"><img src="assets/images/marginalia.jpg" alt="Screenshot of Marginalia"></div></div></div>
+            </article>
+
+            <article class="card rv" style="--i:3; --glow:#7C6CFF; --glowtxt:#5B4BE0">
+              <a class="shot" href="https://cad.chandrima-das.com/" target="_blank" rel="noopener" data-cursor="Visit">
+                <div class="frame"><div class="fbar"><i></i><i></i><i></i><span>cad.chandrima-das.com</span></div><div class="fview"><img src="assets/images/construction-copilot.jpg" alt="Screenshot of Construction Copilot"></div></div>
+              </a>
+              <div class="card-body">
+                <h3><a href="/projects/construction-copilot">Construction Copilot</a></h3>
+                <div class="card-xtra"><div>
+                  <p class="kind"><span>04</span>LLM agent for CAD drawings</p>
+                  <p class="line">Ask building plans anything; 20 tools measure every number from the DXF.</p>
+                  <div class="links"><a class="lk main" href="https://cad.chandrima-das.com/" target="_blank" rel="noopener" data-cursor-hover>Click here to check it out <span aria-hidden="true">↗</span></a><a class="lk" href="https://github.com/Chandrima2005/pdfdxf2summery" target="_blank" rel="noopener" data-cursor-hover>Source</a><a class="lk" href="/projects/construction-copilot" data-cursor-hover>Details <span aria-hidden="true">→</span></a></div>
+                </div></div>
+              </div>
+            </article>
+
+            <article class="card rv" style="--i:4; --glow:#E0B04A; --glowtxt:#B0841A">
+              <a class="shot" href="https://rag-doc-qa-by-chandrima.netlify.app/" target="_blank" rel="noopener" data-cursor="Visit">
+                <div class="frame"><div class="fbar"><i></i><i></i><i></i><span>rag-doc-qa-by-chandrima.netlify.app</span></div><div class="fview"><img src="assets/images/marginalia.jpg" alt="Screenshot of Marginalia"></div></div>
+              </a>
+              <div class="card-body">
+                <h3><a href="/projects/marginalia">Marginalia</a></h3>
+                <div class="card-xtra"><div>
+                  <p class="kind"><span>05</span>Retrieval-augmented Q&amp;A</p>
+                  <p class="line">Upload a PDF; answers come only from its top 4 passages. No servers.</p>
+                  <div class="links"><a class="lk main" href="https://rag-doc-qa-by-chandrima.netlify.app/" target="_blank" rel="noopener" data-cursor-hover>Click here to check it out <span aria-hidden="true">↗</span></a><a class="lk" href="https://github.com/Chandrima2005/rag-doc-qa" target="_blank" rel="noopener" data-cursor-hover>Source</a><a class="lk" href="/projects/marginalia" data-cursor-hover>Details <span aria-hidden="true">→</span></a></div>
+                </div></div>
+              </div>
+            </article>
+
+            <a class="card card-more rv" style="--i:5" href="https://github.com/Chandrima2005?tab=repositories" target="_blank" rel="noopener" data-cursor="Visit">
+              <span class="cm-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.42c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.4-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg></span>
+              <h3>There's more on GitHub</h3>
+              <p class="line">Computer vision, robotics and AutoML experiments, plus hackathon work.</p>
+              <span class="lk main">All repositories <span aria-hidden="true">↗</span></span>
             </a>
-            <div class="more rv" style="--i:2">
-              <div><h3>There's more on GitHub</h3><p>Computer vision, robotics and AutoML experiments, plus hackathon work.</p></div>
-              <a class="btn" href="https://github.com/Chandrima2005?tab=repositories" target="_blank" rel="noopener" data-cursor-hover>All repositories</a>
-            </div>
           </div>
         </div>
       </section>
@@ -189,7 +231,7 @@
               <span class="xl-when">Mar 2025 — Jul 2026</span>
               <div class="xl-main">
                 <p class="xl-role"><b>Thesis Researcher</b><span>Saha Institute of Nuclear Physics</span></p>
-                <div class="xl-more"><div><p>Neutron/gamma classification for a dark-matter detector: 512-D STFT features from 200 real events, SVM from scratch, up to <b>100% accuracy</b>. <a href="#index">See the project</a></p></div></div>
+                <div class="xl-more"><div><p>Neutron/gamma classification for a dark-matter detector: 512-D STFT features from 200 real events, SVM from scratch, up to <b>100% accuracy</b>. <a href="/projects/index">See the project</a></p></div></div>
               </div>
               <span class="xl-tag">Research</span>
             </li>
@@ -265,16 +307,10 @@
         </div>
       </section>
 
-      <section class="pg pg-signal" id="signal" data-label="Signal">
-        <div class="wrap">
-          <p class="signal-line"><span>Noise is loud.</span><span>Signal is patient.</span></p>
-          <p class="signal-sub">I believe smart work pays off only when it is built on hard work. I adapt quickly to new problems, tools and roles, and I bring the same care to each of them.</p>
-        </div>
-      </section>
-
       <!-- CONTACT + FOOTER (the last screen of the landing page) -->
       <section class="pg pg-foot" id="contact" data-label="Contact" aria-labelledby="contactH">
         <div class="wrap">
+          <p class="sh-no">05 <i></i> Say hello</p>
           <h2 class="ft-big" id="contactH" tabindex="-1">Thanks for<br>tuning in.</h2>
           <div class="ct-grid">
             <div class="ct-intro">
@@ -312,14 +348,12 @@
     </div>
 
     <nav class="dots" id="dots" aria-label="Pages">
-      <a href="#home"><span>Intro</span></a>
-      <a href="#projects"><span>Projects</span></a>
-      <a href="#projects-more"><span>More projects</span></a>
-      <a href="#experience"><span>Experience</span></a>
-      <a href="#education"><span>Education</span></a>
-      <a href="#skills"><span>Skills</span></a>
-      <a href="#signal"><span>Signal</span></a>
-      <a href="#contact"><span>Contact</span></a>
+      <a href="/"><span>Intro</span></a>
+      <a href="/projects"><span>Projects</span></a>
+      <a href="/experience"><span>Experience</span></a>
+      <a href="/education"><span>Education</span></a>
+      <a href="/skills"><span>Skills</span></a>
+      <a href="/contact"><span>Contact</span></a>
     </nav>
   </section>
 </div>
@@ -327,7 +361,7 @@
 <div class="view" data-view="gradient-atlas" data-label="Gradient Atlas" data-title="Gradient Atlas · Chandrima Das">
   <section class="pdetail">
     <div class="wrap">
-      <div class="pd-top"><a class="pd-back" href="#projects" data-cursor-hover><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>All projects</a><span class="pd-count">01 / 05</span></div>
+      <div class="pd-top"><a class="pd-back" href="/projects" data-cursor-hover><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>All projects</a><span class="pd-count">01 / 05</span></div>
       <article class="proj" style="--glow:#E08A1E; --glowtxt:#E08A1E">
         <a class="shot" href="https://gradient-atlas.chandrima-das.com/" target="_blank" rel="noopener" data-cursor="Visit">
           <div class="frame"><div class="fbar"><i></i><i></i><i></i><span>gradient-atlas.chandrima-das.com</span></div><div class="fview"><img src="assets/images/gradient-atlas.jpg" alt="Screenshot of the Gradient Atlas website"></div></div>
@@ -343,7 +377,7 @@
           <div class="plinks"><a class="btn primary" href="https://gradient-atlas.chandrima-das.com/" target="_blank" rel="noopener" data-cursor-hover>Live demo</a><a class="btn" href="https://github.com/Chandrima2005/Gradient-atlas" target="_blank" rel="noopener" data-cursor-hover>Source</a></div>
         </div>
       </article>
-      <nav class="pd-nav" aria-label="More projects"><a class="pd-prev" href="#marginalia" data-cursor-hover><small>Previous</small>Marginalia</a><a class="pd-next" href="#index" data-cursor-hover><small>Next</small>InDEx n/γ Discrimination</a></nav>
+      <nav class="pd-nav" aria-label="More projects"><a class="pd-prev" href="/projects/marginalia" data-cursor-hover><small>Previous</small>Marginalia</a><a class="pd-next" href="/projects/index" data-cursor-hover><small>Next</small>InDEx n/γ Discrimination</a></nav>
     </div>
   </section>
 </div>
@@ -351,7 +385,7 @@
 <div class="view" data-view="index" data-label="InDEx n/γ" data-title="InDEx n/γ Discrimination · Chandrima Das">
   <section class="pdetail">
     <div class="wrap">
-      <div class="pd-top"><a class="pd-back" href="#projects" data-cursor-hover><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>All projects</a><span class="pd-count">02 / 05</span></div>
+      <div class="pd-top"><a class="pd-back" href="/projects" data-cursor-hover><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>All projects</a><span class="pd-count">02 / 05</span></div>
       <article class="proj" style="--glow:#FF8A3D; --glowtxt:#F07A2E">
         <a class="shot" href="https://neutron-gamma-detector.chandrima-das.com/" target="_blank" rel="noopener" data-cursor="Visit">
           <div class="frame"><div class="fbar"><i></i><i></i><i></i><span>neutron-gamma-detector.chandrima-das.com</span></div><div class="fview"><img src="assets/images/index-dashboard.jpg" alt="Screenshot of the InDEx neutron/gamma dashboard"></div></div>
@@ -367,7 +401,7 @@
           <div class="plinks"><a class="btn primary" href="https://neutron-gamma-detector.chandrima-das.com/" target="_blank" rel="noopener" data-cursor-hover>Live demo</a><a class="btn" href="https://github.com/Chandrima2005/neutron-gamma-detector" target="_blank" rel="noopener" data-cursor-hover>Source</a></div>
         </div>
       </article>
-      <nav class="pd-nav" aria-label="More projects"><a class="pd-prev" href="#gradient-atlas" data-cursor-hover><small>Previous</small>Gradient Atlas</a><a class="pd-next" href="#plugged-in" data-cursor-hover><small>Next</small>Plugged In</a></nav>
+      <nav class="pd-nav" aria-label="More projects"><a class="pd-prev" href="/projects/gradient-atlas" data-cursor-hover><small>Previous</small>Gradient Atlas</a><a class="pd-next" href="/projects/plugged-in" data-cursor-hover><small>Next</small>Plugged In</a></nav>
     </div>
   </section>
 </div>
@@ -375,7 +409,7 @@
 <div class="view" data-view="plugged-in" data-label="Plugged In" data-title="Plugged In · Chandrima Das">
   <section class="pdetail">
     <div class="wrap">
-      <div class="pd-top"><a class="pd-back" href="#projects" data-cursor-hover><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>All projects</a><span class="pd-count">03 / 05</span></div>
+      <div class="pd-top"><a class="pd-back" href="/projects" data-cursor-hover><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>All projects</a><span class="pd-count">03 / 05</span></div>
       <article class="proj" style="--glow:#2DD4BF; --glowtxt:#14A99A">
         <a class="shot" href="https://chandrima2005.github.io/analytics-dashboard-assessment/" target="_blank" rel="noopener" data-cursor="Visit">
           <div class="frame"><div class="fbar"><i></i><i></i><i></i><span>chandrima2005.github.io/analytics-dashboard-assessment</span></div><div class="fview"><img src="assets/images/plugged-in.jpg" alt="Screenshot of the Plugged In EV dashboard"></div></div>
@@ -391,7 +425,7 @@
           <div class="plinks"><a class="btn primary" href="https://chandrima2005.github.io/analytics-dashboard-assessment/" target="_blank" rel="noopener" data-cursor-hover>Live demo</a><a class="btn" href="https://github.com/Chandrima2005/analytics-dashboard-assessment" target="_blank" rel="noopener" data-cursor-hover>Source</a></div>
         </div>
       </article>
-      <nav class="pd-nav" aria-label="More projects"><a class="pd-prev" href="#index" data-cursor-hover><small>Previous</small>InDEx n/γ Discrimination</a><a class="pd-next" href="#construction-copilot" data-cursor-hover><small>Next</small>Construction Copilot</a></nav>
+      <nav class="pd-nav" aria-label="More projects"><a class="pd-prev" href="/projects/index" data-cursor-hover><small>Previous</small>InDEx n/γ Discrimination</a><a class="pd-next" href="/projects/construction-copilot" data-cursor-hover><small>Next</small>Construction Copilot</a></nav>
     </div>
   </section>
 </div>
@@ -399,7 +433,7 @@
 <div class="view" data-view="construction-copilot" data-label="Construction Copilot" data-title="Construction Copilot · Chandrima Das">
   <section class="pdetail">
     <div class="wrap">
-      <div class="pd-top"><a class="pd-back" href="#projects" data-cursor-hover><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>All projects</a><span class="pd-count">04 / 05</span></div>
+      <div class="pd-top"><a class="pd-back" href="/projects" data-cursor-hover><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>All projects</a><span class="pd-count">04 / 05</span></div>
       <article class="proj" style="--glow:#7C6CFF; --glowtxt:#6B5BF0">
         <a class="shot" href="https://cad.chandrima-das.com/" target="_blank" rel="noopener" data-cursor="Visit">
           <div class="frame"><div class="fbar"><i></i><i></i><i></i><span>cad.chandrima-das.com</span></div><div class="fview"><img src="assets/images/construction-copilot.jpg" alt="Screenshot of Construction Copilot"></div></div>
@@ -415,7 +449,7 @@
           <div class="plinks"><a class="btn primary" href="https://cad.chandrima-das.com/" target="_blank" rel="noopener" data-cursor-hover>Live demo</a><a class="btn" href="https://github.com/Chandrima2005/pdfdxf2summery" target="_blank" rel="noopener" data-cursor-hover>Source</a></div>
         </div>
       </article>
-      <nav class="pd-nav" aria-label="More projects"><a class="pd-prev" href="#plugged-in" data-cursor-hover><small>Previous</small>Plugged In</a><a class="pd-next" href="#marginalia" data-cursor-hover><small>Next</small>Marginalia</a></nav>
+      <nav class="pd-nav" aria-label="More projects"><a class="pd-prev" href="/projects/plugged-in" data-cursor-hover><small>Previous</small>Plugged In</a><a class="pd-next" href="/projects/marginalia" data-cursor-hover><small>Next</small>Marginalia</a></nav>
     </div>
   </section>
 </div>
@@ -423,7 +457,7 @@
 <div class="view" data-view="marginalia" data-label="Marginalia" data-title="Marginalia · Chandrima Das">
   <section class="pdetail">
     <div class="wrap">
-      <div class="pd-top"><a class="pd-back" href="#projects" data-cursor-hover><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>All projects</a><span class="pd-count">05 / 05</span></div>
+      <div class="pd-top"><a class="pd-back" href="/projects" data-cursor-hover><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>All projects</a><span class="pd-count">05 / 05</span></div>
       <article class="proj" style="--glow:#E0B04A; --glowtxt:#C4921F">
         <a class="shot" href="https://rag-doc-qa-by-chandrima.netlify.app/" target="_blank" rel="noopener" data-cursor="Visit">
           <div class="frame"><div class="fbar"><i></i><i></i><i></i><span>rag-doc-qa-by-chandrima.netlify.app</span></div><div class="fview"><img src="assets/images/marginalia.jpg" alt="Screenshot of Marginalia"></div></div>
@@ -439,7 +473,7 @@
           <div class="plinks"><a class="btn primary" href="https://rag-doc-qa-by-chandrima.netlify.app/" target="_blank" rel="noopener" data-cursor-hover>Live demo</a><a class="btn" href="https://github.com/Chandrima2005/rag-doc-qa" target="_blank" rel="noopener" data-cursor-hover>Source</a></div>
         </div>
       </article>
-      <nav class="pd-nav" aria-label="More projects"><a class="pd-prev" href="#construction-copilot" data-cursor-hover><small>Previous</small>Construction Copilot</a><a class="pd-next" href="#gradient-atlas" data-cursor-hover><small>Next</small>Gradient Atlas</a></nav>
+      <nav class="pd-nav" aria-label="More projects"><a class="pd-prev" href="/projects/construction-copilot" data-cursor-hover><small>Previous</small>Construction Copilot</a><a class="pd-next" href="/projects/gradient-atlas" data-cursor-hover><small>Next</small>Gradient Atlas</a></nav>
     </div>
   </section>
 </div>

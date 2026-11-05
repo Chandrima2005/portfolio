@@ -1,0 +1,7 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/((?!css/|js/|assets/).*)", "destination": "/index.html" }
+  ]
+}

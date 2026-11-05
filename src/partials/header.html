@@ -1,10 +1,13 @@
-<!-- Top bar -->
+<!-- Top bar: inline links on wide screens, the Menu button on phones -->
 <header class="bar">
   <div class="wrap">
-    <a class="brand" href="#home" data-cursor-hover>
-      Chandrima Das
-    </a>
-    <span class="here" id="here">Home</span>
+    <a class="brand" href="/" data-cursor-hover>Chandrima Das</a>
+    <nav class="bar-nav" aria-label="Sections">
+      <a href="/projects" data-link="projects">Projects</a>
+      <a href="/experience" data-link="experience">Experience</a>
+      <a href="/skills" data-link="skills">Skills</a>
+      <a href="/contact" data-link="contact">Contact</a>
+    </nav>
     <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="menu" data-cursor-hover><span id="menuTxt">Menu</span><span class="lines" aria-hidden="true"><i></i><i></i></span></button>
   </div>
 </header>
