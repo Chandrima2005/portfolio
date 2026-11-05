@@ -36,11 +36,23 @@ var PAGE={}; pages.forEach(function(pg,i){ PAGE[pg.id]=i; });
 var pi=-1, p=0, ps=0, lockUntil=0, lastWheel=0, lastGo=0;
 function setPh(){ root.style.setProperty('--ph',innerHeight+'px'); }
 setPh();
+/* the six project tiles are squares: pick the biggest square that lets all of them fit the space
+   (3 x 2 on wide screens, 2 x 3 on tablets; phones keep their slim rows) */
+function squareGrid(){
+  var g=$('.pgrid'); if(!g) return;
+  g.style.gridTemplateColumns=''; g.style.gridTemplateRows='';
+  if(innerWidth<=640) return;
+  var cols=innerWidth<=1000?2:3, rows=Math.ceil(6/cols), gap=parseFloat(getComputedStyle(g).columnGap)||16;
+  var sq=Math.floor(Math.min((g.clientWidth-gap*(cols-1))/cols, (g.clientHeight-gap*(rows-1))/rows));
+  if(sq<120) return;
+  g.style.gridTemplateColumns='repeat('+cols+','+sq+'px)'; g.style.gridTemplateRows='repeat('+rows+','+sq+'px)';
+}
 /* pages never scroll inside, so on a short screen a page's content shrinks until it fits */
 function fitPages(){
   pages.forEach(function(pg){
     var w=pg.querySelector(':scope > .wrap'); if(!w) return;
     pg.classList.add('measure'); w.style.zoom='';
+    if(pg.id==='projects') squareGrid();
     var z=1;
     for(var k=0;k<3;k++){
       var over=Math.max(pg.scrollHeight-pg.clientHeight, w.scrollHeight-w.clientHeight);
@@ -98,95 +110,72 @@ document.addEventListener('keydown',function(e){
 });
 $('#toTop').addEventListener('click',function(){ setPage(0); });
 
-/* ---------- WebGL depth tunnel: the camera travels one stop forward per page ---------- */
+/* ---------- WebGL flowing contour field ----------
+   A full-screen liquid gradient in the theme colours with thin glowing contour lines drifting
+   through it, like a living topographic map of a signal. Each page turn shifts the flow and the
+   colour balance; the mouse gently bends the currents. Same interface: theme(), size(), render(t,f). */
 var gl=null;
 function initGL(){
   if(!window.THREE) return null;
   var canvas=$('#gl'), renderer;
-  try{ renderer=new THREE.WebGLRenderer({canvas:canvas, antialias:true, alpha:true, powerPreference:'high-performance'}); }catch(e){ return null; }
-  var mobile=innerWidth<760, SP=18, N=pages.length;
-  var scene=new THREE.Scene();
-  var cam=new THREE.PerspectiveCamera(60,innerWidth/innerHeight,0.1,200);
-  var zEnd=-(N-1)*SP-60;
-
-  /* drifting particles filling a long tube around the camera path */
-  var count=mobile?1600:3600, pos=new Float32Array(count*3), psz=new Float32Array(count), seed=new Float32Array(count);
-  for(var i=0;i<count;i++){
-    var a=Math.random()*Math.PI*2, r=2.2+Math.pow(Math.random(),0.6)*16;
-    pos[i*3]=Math.cos(a)*r; pos[i*3+1]=Math.sin(a)*r*0.75; pos[i*3+2]=12-Math.random()*(12-zEnd);
-    psz[i]=0.35+Math.pow(Math.random(),4)*1.6; seed[i]=Math.random();
-  }
-  var pg=new THREE.BufferGeometry();
-  pg.setAttribute('position',new THREE.BufferAttribute(pos,3));
-  pg.setAttribute('aSize',new THREE.BufferAttribute(psz,1));
-  pg.setAttribute('aSeed',new THREE.BufferAttribute(seed,1));
-  var uni={uT:{value:0},uPR:{value:1},uA:{value:new THREE.Color()},uB:{value:new THREE.Color()},uC:{value:new THREE.Color()},uAlpha:{value:1},uMouse:{value:new THREE.Vector2()}};
-  var pmat=new THREE.ShaderMaterial({uniforms:uni, transparent:true, depthWrite:false,
-    vertexShader:[
-      'uniform float uT,uPR; uniform vec2 uMouse; attribute float aSize,aSeed; varying float vA,vS;',
-      'void main(){',
-      '  vec3 p=position;',
-      '  p.x+=sin(uT*0.3+aSeed*40.0)*0.35; p.y+=cos(uT*0.25+aSeed*31.0)*0.35;',
-      '  vec4 mv=modelViewMatrix*vec4(p,1.0); float d=-mv.z;',
-      '  gl_PointSize=aSize*uPR*(120.0/max(d,0.5));',
-      '  vA=smoothstep(70.0,14.0,d)*smoothstep(2.0,9.0,d)*(0.35+0.65*sin(uT*1.4+aSeed*6.283))*0.8;',
-      '  vS=aSeed; gl_Position=projectionMatrix*mv;',
-      '}'].join('\n'),
+  try{ renderer=new THREE.WebGLRenderer({canvas:canvas, antialias:false, alpha:true, powerPreference:'high-performance'}); }catch(e){ return null; }
+  var mobile=innerWidth<760;
+  var scene=new THREE.Scene(), cam=new THREE.OrthographicCamera(-1,1,1,-1,0,1);
+  var uni={uT:{value:0}, uRes:{value:new THREE.Vector2(1,1)}, uMouse:{value:new THREE.Vector2(0,0)}, uPage:{value:0},
+           uA:{value:new THREE.Color()}, uB:{value:new THREE.Color()}, uC:{value:new THREE.Color()}, uDark:{value:0}};
+  var mat=new THREE.ShaderMaterial({uniforms:uni, transparent:true, depthWrite:false, depthTest:false,
+    vertexShader:'void main(){ gl_Position=vec4(position.xy,0.,1.); }',
     fragmentShader:[
-      'uniform vec3 uA,uB,uC; uniform float uAlpha; varying float vA,vS;',
-      'void main(){ float r=length(gl_PointCoord-0.5); if(r>0.5) discard;',
-      '  vec3 col=vS<0.45?uA:(vS<0.9?uB:uC);',
-      '  gl_FragColor=vec4(col, smoothstep(0.5,0.05,r)*vA*uAlpha); }'].join('\n')
+      'precision highp float;',
+      'uniform float uT,uPage,uDark; uniform vec2 uRes,uMouse; uniform vec3 uA,uB,uC;',
+      'float h(vec2 p){ return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453); }',
+      'float n(vec2 p){ vec2 i=floor(p), f=fract(p); f=f*f*(3.-2.*f);',
+      '  return mix(mix(h(i),h(i+vec2(1,0)),f.x), mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x), f.y); }',
+      'float fbm(vec2 p){ float v=0., a=.5; mat2 m=mat2(1.6,1.2,-1.2,1.6); for(int i=0;i<4;i++){ v+=a*n(p); p=m*p; a*=.5; } return v; }',
+      'void main(){',
+      '  vec2 uv=gl_FragCoord.xy/uRes; vec2 p=(uv-.5)*vec2(uRes.x/uRes.y,1.)*1.15;',
+      '  p+=uMouse*vec2(.18,.12);',
+      '  float t=uT*.045+uPage*.55;',
+      /* domain warping: the field flows into itself, which gives the liquid look */
+      '  vec2 q=vec2(fbm(p+vec2(0.,t)), fbm(p+vec2(5.2,1.3)-t));',
+      '  vec2 r=vec2(fbm(p+3.*q+vec2(1.7,9.2)+t*1.4), fbm(p+3.*q+vec2(8.3,2.8)-t*1.1));',
+      '  float f=fbm(p+2.6*r);',
+      /* colour: violet to cyan by the flow, the warm accent where the currents twist */
+      '  float shift=.5+.5*sin(uPage*1.1);',
+      '  vec3 col=mix(uA,uB,smoothstep(.36,.7,f+(shift-.5)*.18));  /* keep colours mostly pure: a quick handover, not a long grey mix */',
+      '  col=mix(col,uC,clamp(length(q-.5)*1.3-.25,0.,1.)*.55);',
+      '  float body=smoothstep(.18,.82,f);',
+      /* thin contour lines, anti-aliased with screen-space derivatives of the field */
+      /* distance to the nearest contour, measured in pixels so every line stays about one pixel thin */
+      '  float lv=f*9., line=clamp(1.-abs(fract(lv)-.5)*2./max(fwidth(lv)*1.2,.0001),0.,1.);',
+      '  float mv=f*3., major=clamp(1.-abs(fract(mv)-.5)*2./max(fwidth(mv)*1.4,.0001),0.,1.);',
+      '  float edge=smoothstep(.0,.35,uv.y)*smoothstep(1.,.65,uv.y)*.35+.65;',
+      '  float a=(uDark>.5? .5 : .38)*body + line*(uDark>.5? .3 : .2)*(.4+body) + major*(uDark>.5? .4 : .26)*(.3+body);',
+      '  a*=edge;',
+      '  float g=(h(gl_FragCoord.xy+fract(uT))-.5)*.035;',          /* a whisper of film grain */
+      '  gl_FragColor=vec4(col+g, clamp(a,0.,1.));',
+      '}'].join('\n'),
+    extensions:{derivatives:true}
   });
-  var pts=new THREE.Points(pg,pmat); pts.frustumCulled=false; scene.add(pts);
-
-  /* one ring and one wireframe shape for every page, waiting further down the path */
-  var shapes=[
-    new THREE.IcosahedronGeometry(1.7,1), new THREE.TorusKnotGeometry(1.1,0.32,90,10), new THREE.OctahedronGeometry(1.8,0),
-    new THREE.DodecahedronGeometry(1.6,0), new THREE.TorusGeometry(1.4,0.45,10,40), new THREE.IcosahedronGeometry(1.7,0),
-    new THREE.TorusKnotGeometry(1.1,0.3,90,10,3,5), new THREE.OctahedronGeometry(1.8,1)];
-  var rings=[], objs=[];
-  for(var k=0;k<N;k++){
-    var circ=[]; for(var s=0;s<=96;s++){ var an=s/96*Math.PI*2; circ.push(new THREE.Vector3(Math.cos(an)*8.5,Math.sin(an)*5.6,0)); }
-    var ring=new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(circ), new THREE.LineBasicMaterial({transparent:true, depthWrite:false}));
-    ring.position.set(0,0,-k*SP-SP*0.55); ring.userData.c=k%3; scene.add(ring); rings.push(ring);
-    var side=k%2?-1:1, o=new THREE.LineSegments(new THREE.EdgesGeometry(shapes[k%shapes.length],1), new THREE.LineBasicMaterial({transparent:true, depthWrite:false}));
-    o.position.set(mobile?4.5:10, (k%3-1)*2.2, -k*SP-7); o.userData={c:(k+1)%3, sp:0.15+k*0.03, side:side}; scene.add(o); objs.push(o);
-  }
-  function blending(){ return css('--blend')==='additive'?THREE.AdditiveBlending:THREE.NormalBlending; }
-  var cols=[];
+  scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2,2),mat));
   function theme(){
-    cols=[new THREE.Color(css('--pA')),new THREE.Color(css('--pB')),new THREE.Color(css('--pC'))];
-    uni.uA.value.copy(cols[0]); uni.uB.value.copy(cols[1]); uni.uC.value.copy(cols[2]);
-    var b=blending(), add=b===THREE.AdditiveBlending; uni.uAlpha.value=add?0.85:0.7;
-    pmat.blending=b; pmat.needsUpdate=true;
-    rings.concat(objs).forEach(function(m){ m.material.color.copy(cols[m.userData.c]); m.material.blending=b; m.material.needsUpdate=true; });
+    uni.uA.value.set(css('--pA')); uni.uB.value.set(css('--pB')); uni.uC.value.set(css('--pC'));
+    uni.uDark.value=css('--blend')==='additive'?1:0;
   }
   function size(){
-    var pr=Math.min(devicePixelRatio, mobile?1.5:2);
-    renderer.setPixelRatio(pr); uni.uPR.value=pr;
-    renderer.setSize(innerWidth,innerHeight,false);
-    cam.aspect=innerWidth/innerHeight; cam.updateProjectionMatrix();
+    /* a smooth field needs little resolution: render a bit below screen pixels to stay light */
+    var pr=Math.min(devicePixelRatio,1.5)*(mobile?.6:1);
+    renderer.setPixelRatio(pr); renderer.setSize(innerWidth,innerHeight,false);
+    uni.uRes.value.set(innerWidth*pr, innerHeight*pr);
   }
   theme(); size();
   var mx=0,my=0,cmx=0,cmy=0;
-  addEventListener('pointermove',function(e){ mx=e.clientX/innerWidth*2-1; my=-(e.clientY/innerHeight*2-1); });
-  /* each page's shape is only visible from its own page: it fades in as you arrive and out before the next one shows */
-  function fade(z,camZ){ var d=camZ-z; return clamp((d-3)/6,0,1)*clamp((30-d)/10,0,1); }
-  function fadeRing(z,camZ){ var d=camZ-z; return clamp((d-1)/5,0,1)*clamp((50-d)/30,0,1); }
+  addEventListener('pointermove',function(e){ mx=e.clientX/innerWidth*2-1; my=-(e.clientY/innerHeight*2-1); },{passive:true});
   return {
     theme:theme, size:size,
-    /* f is the page position, eased: 0 = intro, 1 = projects ... it moves the camera along the path */
     render:function(t,f){
-      uni.uT.value=t;
-      cmx+=(mx-cmx)*0.04; cmy+=(my-cmy)*0.04;
-      var camZ=8-f*SP, bob=Math.sin(f*Math.PI*0.5)*1.4;
-      cam.position.set(cmx*1.1, bob+cmy*0.6, camZ);
-      cam.lookAt(cmx*0.3, bob*0.6, camZ-14);
-      cam.rotation.z+=Math.sin(f*Math.PI)*0.04;
-      var add=css('--blend')==='additive', base=add?0.55:0.4;
-      rings.forEach(function(r,k){ r.rotation.z=t*0.04*(k%2?-1:1)+k; var sc=1+0.04*Math.sin(t*0.8+k); r.scale.set(sc,sc,1); r.material.opacity=fadeRing(r.position.z,camZ)*base*0.7; });
-      objs.forEach(function(o){ o.rotation.x=t*o.userData.sp; o.rotation.y=t*o.userData.sp*1.3; o.position.y+=(Math.sin(t*0.6+o.position.z)*0.004); o.material.opacity=fade(o.position.z,camZ)*base*0.55; });
+      cmx+=(mx-cmx)*.03; cmy+=(my-cmy)*.03;
+      uni.uT.value=t; uni.uPage.value=f; uni.uMouse.value.set(cmx,cmy);
       renderer.render(scene,cam);
     }
   };
@@ -308,6 +297,7 @@ function openPeek(card){
   clearTimeout(closePeek.t); clearTimeout(openPeek.t); clearTimeout(closeT);
   if(peekCard && peekCard!==card) peekCard.classList.remove('peeked');
   peekCard=card; card.classList.add('peeked');
+  card.parentNode.classList.add('used');  /* the visitor has found the preview: retire the "Hover to preview" tag */
   /* wait until the screenshot is decoded, so the zoom never stalls on it */
   var ready=pkImg.decode? pkImg.decode().catch(function(){}) : Promise.resolve();
   ready.then(function(){
@@ -347,6 +337,11 @@ $$('.pgrid > .card:not(.card-more)').forEach(function(card){
   card.addEventListener('pointerenter',function(e){ armPeek(card,e); });
   card.addEventListener('pointermove',function(e){ armPeek(card,e); });
   card.addEventListener('pointerleave',function(){ if(!peekCard){ clearTimeout(openT); openT=0; } });
+  /* clicking anywhere on a tile (outside its own links) opens the project page */
+  card.addEventListener('click',function(e){
+    if(e.target.closest('a')) return;
+    var a=card.querySelector('h3 a'); if(a) a.click();
+  });
 });
 /* while open, the box stays as long as the mouse is over it or over the card it came from */
 peek.addEventListener('pointermove',function(e){
@@ -707,6 +702,12 @@ else{
 }
 
 /* ---------- boot ---------- */
+/* a refresh always starts again from the intro; opening a shared link (e.g. /projects) still goes straight there */
+try{
+  var navEntry=performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+  var reloaded=navEntry? navEntry.type==='reload' : (performance.navigation && performance.navigation.type===1);
+  if(reloaded && (location.pathname!=='/' || location.hash)) history.replaceState(null,'','/'+location.search);
+}catch(e){}
 gl=initGL();
 route();
 
