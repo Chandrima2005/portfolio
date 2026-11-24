@@ -827,3 +827,34 @@ body.cv-open .cv-panel{transform:none}
   .cv-title span{display:none}
   .cv-dl{padding:.5rem .8rem}
 }
+
+/* ===== PHONES: résumé button beside Menu, projects heading stacked, tiles that never clip their names ===== */
+.bar-cv-m{display:none}
+@media (max-width:860px){
+  .bar-cv-m{display:inline-flex; align-items:center; margin-left:auto; margin-right:.5rem; padding:.55rem 1rem; border-radius:999px; border:1px solid color-mix(in srgb,var(--violet) 45%,var(--line)); background:var(--glass); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); color:var(--ink); font-weight:600; font-size:.92rem; text-decoration:none; white-space:nowrap}
+  .bar-cv-m:hover{background:var(--violet); border-color:var(--violet); color:#fff}
+}
+@media (max-width:860px){ .bar .brand{white-space:nowrap} }
+@media (max-width:480px){
+  .bar .wrap{width:calc(100% - 2rem)}
+  .bar .brand{font-size:1rem}
+  .bar-cv-m{padding:.45rem .8rem; font-size:.84rem; margin-right:.4rem}
+  .menu-btn{padding:.45rem .6rem .45rem .85rem; font-size:.84rem; gap:.5rem}
+}
+@media (max-width:360px){
+  .bar .brand{font-size:.9rem}
+  .menu-btn #menuTxt{display:none}
+  .menu-btn{padding:.6rem .7rem}
+}
+@media (max-width:640px){
+  /* the wrapping flex row turned into side-by-side columns here; stack the label, title and hint instead */
+  .pg-work .sh{display:block}
+  .pg-work .sh-no{margin-bottom:.4rem}
+  .pg-work .sh h2{margin:0 0 .3rem}
+  .pj-hint{margin:0}
+  /* the whole tile opens the project on tap, so the link row only crowded the name out of view */
+  .pgrid .card-xtra{display:none}
+  .pgrid .card-body{justify-content:safe center; overflow:hidden}
+  .pgrid .card h3{font-size:clamp(.92rem,4.2vw,1.05rem); line-height:1.2}
+  .pgrid .card h3 a{overflow-wrap:anywhere}
+}
